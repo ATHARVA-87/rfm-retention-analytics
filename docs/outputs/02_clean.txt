@@ -1,0 +1,19 @@
+ step |            step_name             | rows_before | rows_after | rows_removed |                                                  reason                                                   
+------+----------------------------------+-------------+------------+--------------+-----------------------------------------------------------------------------------------------------------
+    1 | cast types                       |     1067371 |    1067371 |            0 | Quantity->INT, Price->NUMERIC, Customer ID->INT, InvoiceDate parsed from DD-MM-YYYY HH24:MI
+    2 | remove exact duplicates          |     1067371 |    1033036 |        34335 | ROW_NUMBER() over all 8 columns; keeps first copy (includes the Dec 2010 sheet overlap)
+    3 | flag cancellations / adjustments |     1033036 |    1033036 |            0 | Flag only: 19104 cancellation rows (C), 6 adjustment rows (A)
+    4 | drop cancellations               |     1033036 |    1013932 |        19104 | Invoice starts with C
+    5 | drop adjustments                 |     1013932 |    1013926 |            6 | Invoice starts with A (bad-debt adjustments)
+    6 | drop quantity <= 0               |     1013926 |    1010533 |         3393 | Zero-price stock corrections (blank description, "damages", "check", "missing"); none carry a Customer ID
+    7 | drop price <= 0                  |     1010533 |    1007912 |         2621 | Free or zero-priced lines carry no revenue
+    8 | exclude missing Customer ID      |     1007912 |     779425 |       228487 | Cannot attribute to a customer; 228487 rows worth GBP 3090394.12 kept in retail_purchases
+    9 | add line revenue                 |      779425 |     779425 |            0 | revenue = quantity * price (GBP)
+(9 rows)
+
+psql:/sql/02_clean.sql:129: NOTICE:  cleaning_log reconciles across all steps
+  rows  | customers | invoices | revenue_gbp |    first_invoice    |    last_invoice     
+--------+-----------+----------+-------------+---------------------+---------------------
+ 779425 |      5878 |    36969 | 17374804.27 | 2009-12-01 07:45:00 | 2011-12-09 12:50:00
+(1 row)
+

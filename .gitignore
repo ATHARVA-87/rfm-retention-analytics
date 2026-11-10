@@ -1,0 +1,9 @@
+.env
+data/raw/
+data/export/
+__pycache__/
+.ipynb_checkpoints/
+*.pbix
+.pbi/
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
