@@ -1,0 +1,8 @@
+ source_sheet |  rows   
+--------------+---------
+ 2009-2010    |  525461
+ 2010-2011    |  541910
+ total        | 1067371
+(3 rows)
+
+psql:/sql/01_load.sql:45: NOTICE:  retail_raw verified: 1067371 rows

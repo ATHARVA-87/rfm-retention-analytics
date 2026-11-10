@@ -58,7 +58,7 @@ ORDER BY month;
 WITH monthly AS (
     SELECT EXTRACT(MONTH FROM invoice_date)::INT AS m, EXTRACT(YEAR FROM invoice_date)::INT AS y, SUM(revenue) AS revenue
     FROM retail_clean
-    WHERE invoice_date >= '2010-01-01' AND invoice_date < '2011-12-01'
+    WHERE EXTRACT(YEAR FROM invoice_date) IN (2010, 2011) AND EXTRACT(MONTH FROM invoice_date) <= 11
     GROUP BY 1, 2
 )
 SELECT m AS month_no,

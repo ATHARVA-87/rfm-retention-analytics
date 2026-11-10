@@ -66,8 +66,7 @@
         9 |    829013.95 |    950690.20 |    14.7
        10 |   1033112.01 |   1035642.45 |     0.2
        11 |   1166460.02 |   1156205.61 |    -0.9
-       12 |    570422.73 |              |        
-          |   8374496.09 |   7799595.72 |    -6.9
+          |   7804073.36 |   7799595.72 |    -0.1
 
 == UK vs rest of world
      market     | customers | orders | revenue_gbp | revenue_share_pct | customer_share_pct | aov_gbp 

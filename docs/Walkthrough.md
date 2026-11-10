@@ -10,6 +10,10 @@ This is a ground-up explanation of the project: what was done, why, and what eac
 5. Step 3: Clean (`sql/02_clean.sql`)
 6. Step 4: Explore (`sql/03_explore.sql`)
 7. Step 5: RFM segmentation (`notebooks/rfm_segmentation.ipynb`)
+8. Step 6: Power BI model, measures and pages (`powerbi/`)
+9. Step 7: Findings (`docs/findings.md`)
+10. Step 8: README, automation and reproduction
+11. Credits
 
 ---
 
@@ -146,7 +150,7 @@ All queries run on `retail_clean`. AOV (average order value) = revenue ÷ distin
 | 2010 | full year | 18,325 | 4,231 | £8,374,496.09 | £457.00 |
 | 2011 | to 9 Dec | 17,132 | 4,219 | £8,316,804.16 | £485.45 |
 
-**Comparing years fairly:** for the months covered in both years (Jan–Nov), 2011 revenue was £7,799,595.72, against £8,374,496.09 for all of 2010. That figure includes December 2010, so the gap isn't like-for-like. Month by month, 2011 was:
+**Comparing years fairly:** 2009 covers only December and 2011 stops on 9 Dec, so the years are compared on Jan–Nov only. On that basis revenue was flat: £7,804,073.36 in 2010 and £7,799,595.72 in 2011 (−0.1%). Month by month, 2011 was:
 - below 2010 in Feb (−11.6%), Mar (−14.8%) and Apr (−20.9%);
 - above 2010 in May (+13.3%) and Sep (+14.7%);
 - within ±7% in the other months.
@@ -304,3 +308,132 @@ Checks:
 - `analysis_ready` row count equals `retail_clean` (779,425).
 - Its revenue equals `retail_clean` exactly (£17,374,804.27).
 - No row lacks a segment.
+
+## 8. Step 6: Power BI model, measures and pages (`powerbi/`)
+The .pbix is built by hand in Power BI Desktop on Windows. The service-side automation (publish and refresh through the REST API) needs a Power BI cloud account, and the available school tenant doesn't allow sign-up. Everything that can be prepared as files was prepared.
+
+**Getting the data across:**
+- `run_all.sh` writes `data/export/rfm_bi.dump` (14.4 MB, `pg_dump -Fc`), containing `analysis_ready`, `customer_rfm` and `segment_rules`.
+- On Windows, restore it into PostgreSQL 16 and import the three tables in **Import** mode.
+- This is needed because Linux and Windows don't run at the same time on a dual-boot machine. A network connection is documented as the alternative.
+
+**Model** (`dax_measures.md`):
+- `analysis_ready` is the fact table at transaction-line grain.
+- `customer_rfm` is a customer dimension, joined on customer_id.
+- `segment_rules` is a segment dimension, joined on segment.
+- `Date` is a DAX calendar table, joined on invoice_day.
+- All relationships are single direction, one-to-many.
+
+**Why customer measures count `analysis_ready[customer_id]`:** filters flow from the dimensions to the fact table, so a distinct count on the fact table responds to every slicer, including Year, Quarter and Month. Counting rows of `customer_rfm` would ignore time filters, because single-direction relationships don't filter a dimension from the fact table.
+
+**Measures:**
+
+| Group | Measures |
+|---|---|
+| Core | Total Revenue (£), Orders, Total Customers, Avg Order Value (£), Avg Customer Value (£), Churned Customers, Active Customers, Churned %, Revenue from Churned (£) |
+| Time | Revenue Prev Month, MoM %, Same Period LY, YoY % |
+| Retention | New Customers (first purchase inside the selected dates), Returning Customers, Returning % |
+| Segment | Revenue Share %, Customer Share % (segment filter removed from the denominator), Avg Recency / Frequency / Monetary (lifetime, per active customer), Champions Revenue and Share %, At Risk Customers and Revenue, Loyal Churned Customers and Revenue, Lost Customers |
+| Toggle | `Metric Toggle` field parameter switching the trend line between Total Revenue and Total Customers, plus a `Trend Title` measure for a dynamic title |
+
+**Loading the measures:**
+- All measures are in one `DEFINE … EVALUATE` block for DAX query view. Running it once and clicking "Update model with changes" adds every measure.
+- The same query returns check tables. These must match the expected values, which are copied from the SQL and notebook outputs.
+
+**Churn under time filters:** the churn flag is a snapshot at 10 Dec 2011. With a period selected, Churned % reads as "of customers who bought in this period, the share who are churned now". This is stated in the measure notes and on the Home glossary.
+
+**Pages** (`layout_spec.md`):
+- **Home:** title, navigation buttons, headline cards, data note, glossary built from `segment_rules`.
+- **Business Overview:**
+  - KPI cards;
+  - monthly trend with the revenue/customers toggle;
+  - quarter comparison by year (shows the Q4 peak and the flat year on year);
+  - revenue by country;
+  - new vs returning customers per quarter;
+  - top 10 customers.
+- **RFM Analysis:**
+  - risk KPI cards;
+  - customer share vs revenue share by segment;
+  - R×F matrix (mirrors the notebook grid);
+  - churn by country, with countries above the overall rate in the risk colour;
+  - segment table with an action column.
+
+The six slicers (Month, Quarter, Year, Country, Segment, Is Churned) are synced across the two analysis pages.
+
+**Theme** (`theme.json`):
+- same palette as the Matplotlib charts;
+- Segoe UI, which is native to Windows and Power BI;
+- white visuals on a `#F7F7F5` page, with no borders or shadows.
+
+Design rules, taken from the referenced frontend-design guidance:
+- a neutral base with one sharp accent;
+- colour only where it encodes meaning;
+- no gradients, no pure black, no decorative visuals.
+
+**Acceptance checks:**
+- unfiltered cards match the totals;
+- Segment = At Risk shows 821 customers and £1,586,359.12;
+- Year = 2011 shows £8,316,804.16 and 17,132 orders.
+
+## 9. Step 7: Findings (`docs/findings.md`)
+Each finding is a figure from `docs/outputs/` or from one of the `customer_rfm` queries below. The queries were run against the tables produced in Step 5:
+
+| Query | Result |
+|---|---|
+| At Risk with M = 5 | 97 customers, £832,906.23 |
+| At Risk by recency | 191–365 days: 368 customers, £784,634.10. Over 365 days: 453, £801,725.02 |
+| Champions with M = 5 | 833 customers, £10,908,425.05 |
+| Champions with R = 4 (22–59 days) | 624 customers, £3,017,715.95 |
+| Loyal, churned | 445 customers, £1,051,620.05, recency 92–190 days |
+| Loyal, active | 785 customers, £1,484,395.23 |
+| New with one order | 237 customers, £80,505.44, £339.69 average |
+| Netherlands | 16 churned customers, £15,817.50. 6 active, £538,220.59 |
+| UK vs non-UK | churn 51.2% vs 47.7%. Average customer value £2,689.61 vs £5,654.11 |
+
+**How the answers were derived:**
+- **Q1 (value):** from the segment summary and the concentration query. Champions plus the top-percentile shares show how concentrated value is.
+- **Q2 (quiet customers):** from the churn flag crossed with segments. Because the R = 3 band (60–190 days) straddles the 90-day line, Loyal and Needs Attention split into active and churned. That split surfaces the 445 lapsing Loyal customers as the earliest warning.
+- **Q3 (time):** from the monthly, quarterly and like-for-like Jan–Nov comparison, plus the new vs returning and cohort queries.
+- **Q4 (country):** churn rates for countries with ≥ 20 customers. Each rate is read together with the revenue behind it, which is how the Netherlands' high rate turns out to involve little revenue.
+- **Q5 (action):** each segment's action targets the sub-group where the revenue is. It names the customer count and the revenue held, so the action can be sized and tracked.
+
+## 10. Step 8: README, automation and reproduction
+`README.md` covers:
+- overview, business problem and questions;
+- data source with CC BY 4.0 credit, tech stack and workflow;
+- cleaning log, segment rule table and key findings;
+- dashboard screenshot placeholders (`docs/img/`);
+- reproduction steps and credits.
+
+**`run_all.sh` rebuilds everything in one command**, after `conda activate rfm` and a `.env` file:
+1. It checks the Python environment.
+2. It starts the `rfm-postgres` container. The container is bound to 127.0.0.1 by default; `PG_BIND=0.0.0.0` exposes it for network access.
+3. It downloads and converts the data, skipping this if the files are present.
+4. It runs the three SQL scripts with `ON_ERROR_STOP`, saving their output to `docs/outputs/`.
+5. It executes the notebook headless and saves its text output.
+6. It writes `data/export/rfm_bi.dump`.
+7. It prints the segment summary.
+
+`--pgadmin` also starts pgAdmin 4 at http://localhost:5050. It's pre-registered to the database through `scripts/pgadmin/servers.json` and needs no pgAdmin login.
+
+**Verification:** the pipeline was run from scratch, after deleting the database container and volume:
+- load verified 1,067,371 rows;
+- the cleaning log reconciled;
+- all notebook assertions passed;
+- the regenerated outputs matched the committed ones.
+
+The one exception was the year-over-year query, which was corrected during Step 7. It had compared Jan–Nov 2011 with all of 2010, including December, and now compares Jan–Nov in both years.
+
+**Reproduce:**
+```bash
+git clone https://github.com/ATHARVA-87/rfm-retention-analytics.git
+cd rfm-retention-analytics
+conda env create -f environment.yml && conda activate rfm
+cp .env.example .env            # set PGPASSWORD
+./run_all.sh --pgadmin
+```
+
+## 11. Credits
+Data: Daqing Chen, Online Retail II, UCI Machine Learning Repository, CC BY 4.0.
+
+Methodology inspired by Mansi Goel's public tutorial; rebuilt independently in PostgreSQL and Python.

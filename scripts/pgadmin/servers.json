@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "rfm (retail)",
+      "Group": "Servers",
+      "Host": "rfm-postgres",
+      "Port": 5432,
+      "MaintenanceDB": "retail",
+      "Username": "rfm",
+      "SSLMode": "prefer"
+    }
+  }
+}
