@@ -1,0 +1,99 @@
+--[cell 5]
+rows: 779,425  customers: 5,878  invoices: 36,969
+revenue: £17,374,804.27
+dates: 2009-12-01 07:45:00 to 2011-12-09 12:50:00
+
+--[cell 7]
+reference date: 2011-12-10
+customers: 5,878; bought under >1 country: 13
+
+--[cell 7]
+       recency_days  frequency   monetary
+count       5878.00    5878.00    5878.00
+mean         201.87       6.29    2955.90
+std          209.35      13.01   14440.85
+min            1.00       1.00       2.95
+25%           26.00       1.00     342.28
+50%           96.00       3.00     867.74
+75%          380.00       7.00    2248.30
+max          739.00     398.00  580987.04
+--[cell 9]
+                        min        max  size
+metric       score                          
+recency_days 1       412.00     739.00  1168
+             2       191.00     411.00  1175
+             3        60.00     190.00  1180
+             4        22.00      59.00  1140
+             5         1.00      20.00  1215
+frequency    1         1.00       1.00  1176
+             2         1.00       2.00  1175
+             3         2.00       4.00  1176
+             4         4.00       8.00  1175
+             5         8.00     398.00  1176
+monetary     1         2.95     285.56  1176
+             2       285.60     608.86  1175
+             3       609.30    1220.90  1176
+             4      1220.91    2909.86  1175
+             5      2910.23  580987.04  1176
+--[cell 11]
+f                1                2        3          4          5
+r                                                                 
+5              New              New    Loyal  Champions  Champions
+4              New              New    Loyal  Champions  Champions
+3  Needs Attention  Needs Attention    Loyal      Loyal      Loyal
+2             Lost             Lost  At Risk    At Risk    At Risk
+1             Lost             Lost  At Risk    At Risk    At Risk
+
+--[cell 13]
+churned: 2,989 of 5,878 customers (50.9%)
+revenue from churned customers: £3,391,383.66 (19.5% of total)
+
+--[cell 15]
+                 customers  customer_share_pct      revenue  revenue_share_pct  avg_recency_days  avg_frequency  avg_monetary  \
+segment                                                                                                                         
+Champions             1476               25.11  12001386.40              69.07             20.69          15.68       8131.02   
+Loyal                 1230               20.93   2536015.29              14.60             79.31           5.44       2061.80   
+New                    441                7.50    392021.57               2.26             28.51           1.46        888.94   
+Needs Attention        388                6.60    205137.22               1.18            107.62           1.36        528.70   
+At Risk                821               13.97   1586359.12               9.13            370.30           4.94       1932.23   
+Lost                  1522               25.89    653884.67               3.76            460.01           1.25        429.62   
+
+                 median_monetary  churned  churn_rate_pct  
+segment                                                    
+Champions                3392.70        0            0.00  
+Loyal                    1208.77      445           36.18  
+New                       372.22        0            0.00  
+Needs Attention           366.92      201           51.80  
+At Risk                  1025.10      821          100.00  
+Lost                      279.44     1522          100.00  
+--[cell 16]
+Average R/F/M scores per segment
+
+--[cell 16]
+                 r_score  f_score  m_score
+segment                                   
+Champions           4.58     4.61     4.42
+Loyal               3.51     3.59     3.44
+New                 4.39     1.62     1.98
+Needs Attention     3.00     1.50     1.99
+At Risk             1.67     3.52     3.22
+Lost                1.41     1.46     1.70
+--[cell 18]
+                customers      revenue  churned  avg_customer_value  champions  at_risk  churn_rate_pct  revenue_share_pct
+country                                                                                                                   
+United Kingdom       5350  14389436.48     2737             2689.61       1347      774           51.16              82.82
+Netherlands            22    554038.09       16            25183.55          4        6           72.73               3.19
+Germany               106    424922.66       37             4008.70         33        4           34.91               2.45
+France                 95    349107.36       34             3674.81         31        4           35.79               2.01
+Spain                  38    106684.82       18             2807.50          7        1           47.37               0.61
+Switzerland            21     98030.94        9             4668.14          3        3           42.86               0.56
+Belgium                27     63980.07       11             2369.63          9        3           40.74               0.37
+Portugal               24     55554.78       12             2314.78          6        4           50.00               0.32
+--[cell 25]
+                                  0
+customer_rfm_rows           5878.00
+analysis_ready_rows       779425.00
+retail_clean_rows         779425.00
+analysis_ready_revenue  17374804.27
+retail_clean_revenue    17374804.27
+rows_without_segment           0.00

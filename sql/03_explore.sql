@@ -151,3 +151,42 @@ SELECT COUNT(*)                                                                 
        ROUND(100 * SUM(quantity * price) / (SELECT SUM(quantity * price) FROM retail_purchases), 1) AS share_of_all_purchase_revenue_pct
 FROM retail_purchases
 WHERE customer_id IS NULL;
+
+\echo '== Retention over time: new vs returning customers per quarter'
+WITH firsts AS (
+    SELECT customer_id, DATE_TRUNC('quarter', MIN(invoice_date)) AS first_q
+    FROM retail_clean
+    GROUP BY customer_id
+),
+active AS (
+    SELECT DISTINCT customer_id, DATE_TRUNC('quarter', invoice_date) AS q
+    FROM retail_clean
+)
+SELECT TO_CHAR(a.q, 'YYYY-"Q"Q')                                              AS quarter,
+       COUNT(*)                                                               AS active_customers,
+       COUNT(*) FILTER (WHERE a.q = f.first_q)                                AS new_customers,
+       COUNT(*) FILTER (WHERE a.q > f.first_q)                                AS returning_customers,
+       ROUND(100.0 * COUNT(*) FILTER (WHERE a.q > f.first_q) / COUNT(*), 1)   AS returning_pct
+FROM active a
+JOIN firsts f USING (customer_id)
+GROUP BY a.q
+ORDER BY a.q;
+
+\echo '== Retention by acquisition year: share of each cohort still buying in later years'
+WITH cohort AS (
+    SELECT customer_id, EXTRACT(YEAR FROM MIN(invoice_date))::INT AS cohort_year
+    FROM retail_clean
+    GROUP BY customer_id
+),
+years AS (
+    SELECT DISTINCT customer_id, EXTRACT(YEAR FROM invoice_date)::INT AS y
+    FROM retail_clean
+)
+SELECT c.cohort_year,
+       COUNT(DISTINCT c.customer_id)                                                         AS cohort_size,
+       ROUND(100.0 * COUNT(DISTINCT y.customer_id) FILTER (WHERE y.y = 2010) / COUNT(DISTINCT c.customer_id), 1) AS active_2010_pct,
+       ROUND(100.0 * COUNT(DISTINCT y.customer_id) FILTER (WHERE y.y = 2011) / COUNT(DISTINCT c.customer_id), 1) AS active_2011_pct
+FROM cohort c
+JOIN years y USING (customer_id)
+GROUP BY c.cohort_year
+ORDER BY c.cohort_year;

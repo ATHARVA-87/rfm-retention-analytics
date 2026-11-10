@@ -9,6 +9,7 @@ This is a ground-up explanation of the project: what was done, why, and what eac
 4. Step 2: Load (`sql/01_load.sql`)
 5. Step 3: Clean (`sql/02_clean.sql`)
 6. Step 4: Explore (`sql/03_explore.sql`)
+7. Step 5: RFM segmentation (`notebooks/rfm_segmentation.ipynb`)
 
 ---
 
@@ -166,3 +167,140 @@ Thirteen customers bought under two different countries, which is why the two cu
 - All of the top 10 bought in the last four weeks of the data.
 - The top 1% of customers generate 32.0% of revenue, the top 10% generate 64.0%, and the top 20% generate 77.3%.
 - That concentration is why the segmentation weights frequency and recency: losing a few high-frequency accounts would move total revenue.
+
+**Retention over time:** each quarter's active customers are split into new and returning. A customer is new in the quarter of their first purchase in the data.
+
+| Quarter | Active | New | Returning | Returning % |
+|---|---|---|---|---|
+| 2010-Q1 | 1,803 | 1,200 | 603 | 33.4% |
+| 2010-Q2 | 2,047 | 818 | 1,229 | 60.0% |
+| 2010-Q3 | 2,060 | 591 | 1,469 | 71.3% |
+| 2010-Q4 | 2,670 | 778 | 1,892 | 70.9% |
+| 2011-Q1 | 1,776 | 374 | 1,402 | 78.9% |
+| 2011-Q2 | 1,991 | 325 | 1,666 | 83.7% |
+| 2011-Q3 | 2,161 | 397 | 1,764 | 81.6% |
+| 2011-Q4 | 2,560 | 440 | 2,120 | 82.8% |
+
+From 2011 onwards, roughly four in five active customers are returning buyers. New-customer acquisition fell from 778 in 2010-Q4 to 440 in 2011-Q4.
+
+The early-2010 "new" counts are inflated because the data starts in Dec 2009. A customer who first appears in 2010-Q1 may have bought before the data begins, so the quarters from 2011 onwards are the reliable ones.
+
+**By acquisition year:**
+- Of the 955 customers first seen in Dec 2009, 74.2% bought again in 2011.
+- Of the 3,387 first seen in 2010, 58.3% bought in 2011.
+
+## 7. Step 5: RFM segmentation (`notebooks/rfm_segmentation.ipynb`)
+The notebook connects to Postgres with SQLAlchemy and psycopg2, using credentials from `.env`. It reads `retail_clean` straight into pandas, with no files in between. `run_all.sh` runs it headless with `jupyter nbconvert --execute --inplace`. Its printed output is also saved to `docs/outputs/rfm_notebook.txt`.
+
+| Section | What it does | Why |
+|---|---|---|
+| Setup | Engine from `.env`; figure folder | No credentials in code |
+| Chart style | Neutral ink/grey base. One teal accent for value, orange-red only for risk. Segment colours encode health (teal = healthy, slate = new, amber = nudge, orange-red = at risk, grey = lost). Lato font | Colour carries meaning rather than decoration |
+| 1. Load | 779,425 rows, 5,878 customers, 36,969 invoices, £17,374,804.27 | Confirms the read matches `retail_clean` exactly |
+| 2. RFM | Reference date **2011-12-10**, the day after the last invoice. Recency = whole days from the last purchase date. Frequency = distinct invoices. Monetary = sum of line revenue. Primary country = the country with the most revenue for that customer (affects 13 customers) | Definitions as in the BRD |
+| 3. Scores | `pd.qcut(…, 5)`. Recency labels reversed (5 = recent). Frequency ranked with `method='first'` before `qcut` | Frequency has heavy ties (the median customer has 3 invoices), so raw `qcut` would produce duplicate bin edges |
+| 4. Segments | Rule table as a DataFrame, applied first-match. Prints the 5×5 R×F map | The same table drives the code, the BRD and the dashboard (`segment_rules` table) |
+| 5. Churn | `is_churned = recency_days > 90` | Fixed threshold, as stated in the BRD |
+| 6. Summary | Segment sizes, revenue share, average R/F/M, churn. Asserts that customers and revenue reconcile and that shares sum to 100% | Catches silent errors |
+| 7. Country | Churn and value for countries with ≥ 20 customers | Small countries give unstable rates |
+| 8. Charts | 4 PNGs in `notebooks/figures/` | See below |
+| 9. Write-back | `customer_rfm` and `segment_rules` via `to_sql`. `analysis_ready` built inside Postgres as `retail_clean JOIN customer_rfm` plus calendar columns. Asserts row counts and revenue match | The join runs in the database, so 779k rows don't round-trip through Python |
+
+**Customer RFM distribution:**
+- Recency: median 96 days, mean 201.87, range 1–739.
+- Frequency: median 3 invoices, mean 6.29, maximum 398.
+- Monetary: median £867.74, mean £2,955.90, maximum £580,987.04.
+
+The mean monetary value is more than three times the median. This is the same concentration seen in SQL.
+
+**Quintile boundaries** (each band holds about 1,175 customers):
+
+| Score | Recency (days) | Frequency (invoices) | Monetary (£) |
+|---|---|---|---|
+| 5 | 1–20 | 8–398 | 2,910.23–580,987.04 |
+| 4 | 22–59 | 4–8 | 1,220.91–2,909.86 |
+| 3 | 60–190 | 2–4 | 609.30–1,220.90 |
+| 2 | 191–411 | 1–2 | 285.60–608.86 |
+| 1 | 412–739 | 1 | 2.95–285.56 |
+
+Frequency bands overlap at their edges (e.g. both F1 and F2 contain customers with 1 invoice). This is what `rank(method='first')` does: tied customers are split across adjacent bands by their order, so the bands stay equal-sized.
+
+**How the 25 R×F cells map to segments, with customer counts:**
+
+| R \ F | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| 5 | New 56 | New 114 | Loyal 193 | Champions 273 | Champions 579 |
+| 4 | New 110 | New 161 | Loyal 245 | Champions 299 | Champions 325 |
+| 3 | Needs Attention 194 | Needs Attention 194 | Loyal 269 | Loyal 322 | Loyal 201 |
+| 2 | Lost 305 | Lost 320 | At Risk 286 | At Risk 209 | At Risk 55 |
+| 1 | Lost 511 | Lost 386 | At Risk 183 | At Risk 72 | At Risk 16 |
+
+**Segment results:**
+
+| Segment | Customers | % customers | Revenue | % revenue | Avg recency (days) | Avg frequency | Avg monetary | Churned | Churn % |
+|---|---|---|---|---|---|---|---|---|---|
+| Champions | 1,476 | 25.11 | £12,001,386.40 | 69.07 | 20.69 | 15.68 | £8,131.02 | 0 | 0.0 |
+| Loyal | 1,230 | 20.93 | £2,536,015.29 | 14.60 | 79.31 | 5.44 | £2,061.80 | 445 | 36.18 |
+| New | 441 | 7.50 | £392,021.57 | 2.26 | 28.51 | 1.46 | £888.94 | 0 | 0.0 |
+| Needs Attention | 388 | 6.60 | £205,137.22 | 1.18 | 107.62 | 1.36 | £528.70 | 201 | 51.80 |
+| At Risk | 821 | 13.97 | £1,586,359.12 | 9.13 | 370.30 | 4.94 | £1,932.23 | 821 | 100.0 |
+| Lost | 1,522 | 25.89 | £653,884.67 | 3.76 | 460.01 | 1.25 | £429.62 | 1,522 | 100.0 |
+
+Average scores (R / F / M):
+
+| Segment | R | F | M |
+|---|---|---|---|
+| Champions | 4.58 | 4.61 | 4.42 |
+| Loyal | 3.51 | 3.59 | 3.44 |
+| New | 4.39 | 1.62 | 1.98 |
+| Needs Attention | 3.00 | 1.50 | 1.99 |
+| At Risk | 1.67 | 3.52 | 3.22 |
+| Lost | 1.41 | 1.46 | 1.70 |
+
+M was not used to assign segments, yet it follows them. Champions average M = 4.42 and Lost average 1.70. This confirms that an R×F grid separates customers by value too.
+
+**How the churn flag lines up with segments:**
+- Churned overall: **2,989 of 5,878 customers (50.9%)**. They account for £3,391,383.66, or 19.5% of revenue.
+- Champions and New are never churned. They need R ≥ 4, which means recency ≤ 59 days.
+- At Risk and Lost are always churned. They have R ≤ 2, which means recency ≥ 191 days.
+- Loyal and Needs Attention are split because R = 3 covers 60–190 days, which straddles the 90-day line:
+  - 445 Loyal customers (£1,051,620.05 of revenue) have passed 90 days;
+  - 201 Needs Attention customers have passed 90 days.
+
+  These are the earliest warning group.
+
+**Country** (countries with ≥ 20 customers):
+
+| Country | Customers | Churn % | Avg customer value | Revenue share |
+|---|---|---|---|---|
+| United Kingdom | 5,350 | 51.16 | £2,689.61 | 82.82% |
+| Netherlands | 22 | 72.73 | £25,183.55 | 3.19% |
+| Germany | 106 | 34.91 | £4,008.70 | 2.45% |
+| France | 95 | 35.79 | £3,674.81 | 2.01% |
+| Spain | 38 | 47.37 | £2,807.50 | 0.61% |
+| Switzerland | 21 | 42.86 | £4,668.14 | 0.56% |
+| Belgium | 27 | 40.74 | £2,369.63 | 0.37% |
+| Portugal | 24 | 50.00 | £2,314.78 | 0.32% |
+
+Customer counts here use primary country, so Germany shows 106 rather than the 107 in SQL. Across all countries:
+- UK churn is 51.2%, against 47.7% for non-UK customers.
+- Non-UK customers are worth about twice as much on average (£5,654.11 vs £2,689.61).
+
+**Charts** (`notebooks/figures/`):
+1. `01_segment_share.png`: share of customers vs share of revenue per segment. The gap between the two bars is the point of the chart.
+2. `02_rf_grid.png`: customer count in each R×F cell, labelled with its segment. It makes the rule table visible.
+3. `03_monthly_trend.png`: monthly revenue and active customers. December 2011 is omitted (9 days) so it doesn't look like a collapse.
+4. `04_churn_by_country.png`: churn rate by country, with countries above the overall rate highlighted in the risk colour.
+
+**Tables written to Postgres:**
+
+| Table | Grain | Rows | Key columns |
+|---|---|---|---|
+| `customer_rfm` | customer | 5,878 | customer_id (PK), country, first/last_purchase, recency_days, frequency, monetary, r/f/m_score, rfm_score, segment, segment_order, is_churned, churn_status |
+| `segment_rules` | segment | 6 | segment_order, segment, r_min, r_max, f_min, f_max, meaning |
+| `analysis_ready` | transaction line | 779,425 | every `retail_clean` column, plus invoice_day, year, quarter, year_quarter, month_num, month_name, year_month, customer_country, and the customer's RFM, segment and churn columns |
+
+Checks:
+- `analysis_ready` row count equals `retail_clean` (779,425).
+- Its revenue equals `retail_clean` exactly (£17,374,804.27).
+- No row lacks a segment.
