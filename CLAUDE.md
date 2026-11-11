@@ -104,8 +104,8 @@ Cent-level differences can come from `monetary` being stored rounded to 2 dp.
 - [x] 3. Power BI connected (Import), 3 tables loaded, `theme.json` applied
 - [x] 4. Relationships, Date table (marked as date table, sort-by columns), `Metric Toggle` field parameter
 - [x] 5. Measures added via DAX query view; check query matches the verified numbers. **Push milestone (a).**
-- [ ] 6. Page 1 Home built
-- [ ] 7. Page 2 Business Overview built
+- [x] 6. Page 1 Home built
+- [x] 7. Page 2 Business Overview built
 - [ ] 8. Page 3 RFM Analysis built; `segment_rules[Action]` calculated column added
 - [ ] 9. Acceptance checks from `layout_spec.md` passed
 - [ ] 10. Saved `powerbi/rfm_dashboard.pbix`; PDF export to `docs/img/dashboard.pdf`; screenshots `docs/img/home.png`, `overview.png`, `rfm.png`
