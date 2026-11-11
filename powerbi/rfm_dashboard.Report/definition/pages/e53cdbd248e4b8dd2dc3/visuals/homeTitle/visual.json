@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Customer value and churn",
+                    "value": "Customer Value & Retention Analysis",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "24pt",
@@ -32,7 +32,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Who drives revenue, who is slipping away, and what to do about each group, for a UK online giftware retailer.",
+                    "value": "RFM segmentation of 5,878 customers and £17.4M of revenue (Dec 2009 – Dec 2011): where value is concentrated, which customers are lapsing, and the recommended action for each segment.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12pt",

@@ -83,7 +83,7 @@ function SlicerBar($page) {
                 [ordered]@{ properties = [ordered]@{ show = (Bool $true); text = (Str 'Clear filters'); fontColor = (Col '#6E1E2B'); fontSize = (Num 10); fontFamily = (Str 'Segoe UI Semibold') }; selector = @{ id = 'default' } })
             outline = @(foreach ($st in @($null, 'default', 'hover', 'press')) { $e = [ordered]@{ properties = [ordered]@{ show = (Bool $false) } }; if ($st) { $e.selector = @{ id = $st } }; $e })
             fill = @(
-                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col '#FFFFFF'); transparency = (Num 0) }; selector = @{ id = 'default' } },
+                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col $SurfaceHex); transparency = (Num 0) }; selector = @{ id = 'default' } },
                 [ordered]@{ properties = [ordered]@{ fillColor = (Col '#F3EEE6') }; selector = @{ id = 'hover' } })
         }
         visualContainerObjects = [ordered]@{
@@ -199,4 +199,5 @@ function SetSubtitle($page, $name, $text) {
 TextBox $ov 'ovTrendNote' (Pos 272 212 560 40) -Transparent @(Para @(Run 'Monthly points: Dec 2011 covers 1–9 Dec only, so its drop is partial, not a collapse.' 8 '#7A6E66') 'right') -PadTop 14
 SetSubtitle $ov 'ovQuarter' '2009 = December only; Q4 2011 runs to 9 Dec'
 SetSubtitle $ov 'ovNewRet' 'New = first purchase since Dec 2009 (data start)'
+
 

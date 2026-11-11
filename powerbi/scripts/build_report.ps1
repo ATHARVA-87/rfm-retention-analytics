@@ -1,9 +1,12 @@
 # Generates the report pages (PBIR JSON) of powerbi/rfm_dashboard.pbip. Close Power BI Desktop before running.
 param([string]$Report = (Join-Path $PSScriptRoot '..\rfm_dashboard.Report'),
-      [string]$Theme  = (Join-Path $PSScriptRoot '..\theme.json'))
+      [string]$Theme  = (Join-Path $PSScriptRoot '..\theme.json'),
+      [ValidateSet('ivory', 'white')][string]$Surface = 'ivory')
 $ErrorActionPreference = 'Stop'
 if (Get-Process PBIDesktop -ErrorAction SilentlyContinue) { throw 'Close Power BI Desktop first: it overwrites these files on save.' }
 $def = Join-Path $Report 'definition'
+# Page and panel colour: ivory = one uniform warm surface; white = plain white page and panels
+$SurfaceHex = @{ ivory = '#F8F5EF'; white = '#FFFFFF' }[$Surface]
 $VS  = 'https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json'
 $PS  = 'https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json'
 
@@ -58,7 +61,7 @@ function NavLink($page, $name, $pos, $target) {
             text    = @([ordered]@{ properties = [ordered]@{ show = (Bool $false) }; selector = @{ id = 'default' } })
             outline = @(foreach ($st in @($null, 'default', 'hover', 'press', 'selected')) { $e = [ordered]@{ properties = [ordered]@{ show = (Bool $false) } }; if ($st) { $e.selector = @{ id = $st } }; $e })
             fill    = @(
-                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col '#FFFFFF'); transparency = (Num 100) }; selector = @{ id = 'default' } },
+                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col $SurfaceHex); transparency = (Num 100) }; selector = @{ id = 'default' } },
                 [ordered]@{ properties = [ordered]@{ fillColor = (Col '#6E1E2B'); transparency = (Num 94) }; selector = @{ id = 'hover' } }
             )
         }
@@ -97,8 +100,8 @@ function PageNav($page, $name) {
         visualType = 'pageNavigator'
         objects = [ordered]@{
             fill = @(
-                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col '#FFFFFF'); transparency = (Num 0) }; selector = @{ id = 'default' } },
-                [ordered]@{ properties = [ordered]@{ fillColor = (Col '#FFFFFF') }; selector = @{ id = 'selected' } },
+                [ordered]@{ properties = [ordered]@{ show = (Bool $true); fillColor = (Col $SurfaceHex); transparency = (Num 0) }; selector = @{ id = 'default' } },
+                [ordered]@{ properties = [ordered]@{ fillColor = (Col $SurfaceHex) }; selector = @{ id = 'selected' } },
                 [ordered]@{ properties = [ordered]@{ fillColor = (Col '#F3EEE6') }; selector = @{ id = 'hover' } }
             )
             text = @(
@@ -136,7 +139,9 @@ function Page($id, $display) {
 # ---------- theme ----------
 $res = Join-Path $Report 'StaticResources\RegisteredResources'
 New-Item -ItemType Directory -Force $res | Out-Null
-Copy-Item $Theme (Join-Path $res 'RFM_Retention.json') -Force
+$th = [IO.File]::ReadAllText($Theme) -replace '#FFFFFF', $SurfaceHex -replace '#F8F5EF', $SurfaceHex
+if ($Surface -eq 'ivory') { $th = $th -replace '#FBF9F5', '#F1EBE1' }
+[IO.File]::WriteAllText((Join-Path $res 'RFM_Retention.json'), $th, (New-Object Text.UTF8Encoding $false))
 $rj = Get-Content (Join-Path $def 'report.json') -Raw | ConvertFrom-Json -AsHashtable
 $rj.themeCollection.customTheme = [ordered]@{ name = 'RFM_Retention.json'; reportVersionAtImport = $rj.themeCollection.baseTheme.reportVersionAtImport; type = 'RegisteredResources' }
 $rj.resourcePackages = @($rj.resourcePackages | Where-Object { $_.name -ne 'RegisteredResources' }) + @(
@@ -158,8 +163,8 @@ foreach ($p in @(@($ov, 'Business Overview'), @($rfm, 'RFM Analysis'))) {
 
 # ---------- Home ----------
 TextBox $homeId 'homeTitle' (Pos 24 80 600 120) -Transparent @(
-    (Para @(Run 'Customer value and churn' 24 '#2A1E1A' -family 'Segoe UI Semibold')),
-    (Para @(Run 'Who drives revenue, who is slipping away, and what to do about each group, for a UK online giftware retailer.' 12 '#7A6E66')))
+    (Para @(Run 'Customer Value & Retention Analysis' 24 '#2A1E1A' -family 'Segoe UI Semibold')),
+    (Para @(Run 'RFM segmentation of 5,878 customers and £17.4M of revenue (Dec 2009 – Dec 2011): where value is concentrated, which customers are lapsing, and the recommended action for each segment.' 12 '#7A6E66')))
 
 TextBox $homeId 'navOverviewTile' (Pos 24 216 600 80) @(
     (Para @(Run 'Business Overview  →' 14 '#2A1E1A' -family 'Segoe UI Semibold')),
@@ -227,6 +232,7 @@ TextBox $homeId 'definitions' (Pos 656 364 600 164) @(
 . (Join-Path $PSScriptRoot 'build_overview.ps1')
 . (Join-Path $PSScriptRoot 'build_rfm.ps1')
 Get-ChildItem $def -Recurse -File | ForEach-Object { $_.FullName.Substring($def.Length + 1) }
+
 
 
 
