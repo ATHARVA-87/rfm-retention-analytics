@@ -98,8 +98,8 @@ Churned = `recency_days > 90`. The reference date is 2011-12-10.
 Cent-level differences can come from `monetary` being stored rounded to 2 dp.
 
 ## Remaining work (track progress here by ticking boxes)
-- [ ] 1. PostgreSQL 16 installed on Windows (includes pgAdmin 4); `retail` database created
-- [ ] 2. `rfm_bi.dump` restored; row counts verified (779,425 / 5,878 / 6)
+- [x] 1. PostgreSQL 16 installed on Windows (includes pgAdmin 4); `retail` database created
+- [x] 2. `rfm_bi.dump` restored; row counts verified (779,425 / 5,878 / 6)
 - [ ] 3. Power BI connected (Import), 3 tables loaded, `theme.json` applied
 - [ ] 4. Relationships, Date table (marked as date table, sort-by columns), `Metric Toggle` field parameter
 - [ ] 5. Measures added via DAX query view; check query matches the verified numbers. **Push milestone (a).**

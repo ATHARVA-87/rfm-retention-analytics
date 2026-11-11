@@ -316,6 +316,7 @@ The .pbix is built by hand in Power BI Desktop on Windows. The service-side auto
 - `run_all.sh` writes `data/export/rfm_bi.dump` (14.4 MB, `pg_dump -Fc`), containing `analysis_ready`, `customer_rfm` and `segment_rules`.
 - On Windows, restore it into PostgreSQL 16 and import the three tables in **Import** mode.
 - This is needed because Linux and Windows don't run at the same time on a dual-boot machine. A network connection is documented as the alternative.
+- Done on Windows 11: PostgreSQL 16.15 (with pgAdmin 4) installed via winget, `retail` created, and the dump restored with `pg_restore --no-owner`. Row counts verified: `analysis_ready` 779,425, `customer_rfm` 5,878, `segment_rules` 6, the same as on Linux.
 
 **Model** (`dax_measures.md`):
 - `analysis_ready` is the fact table at transaction-line grain.
