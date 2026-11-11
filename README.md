@@ -54,7 +54,6 @@ online_retail_II.xlsx
 | [notebooks/rfm_segmentation.ipynb](notebooks/rfm_segmentation.ipynb) | RFM, segments, churn, charts, write-back |
 | [powerbi/](powerbi/) | Data model and DAX, page layout spec, theme |
 | [docs/findings.md](docs/findings.md) | Findings and actions |
-| [docs/Walkthrough.md](docs/Walkthrough.md) | Full step-by-step explanation |
 | [docs/outputs/](docs/outputs/) | Saved output of every script and the notebook |
 
 ## Cleaning decisions

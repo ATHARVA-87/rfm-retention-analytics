@@ -44,7 +44,7 @@ The five business questions are in `docs/BRD.md`.
 | `powerbi/rfm_dashboard.pbip` + `.Report/` + `.SemanticModel/` | The report as a Power BI Project (source of truth; data cache git-ignored) |
 | `powerbi/scripts/` | Generator for the report pages (`build_report.ps1` → `build_overview.ps1` → `build_rfm.ps1`; `tpl_toggle.json` is the Desktop-authored Button slicer) |
 | `docs/findings.md` | Answers to Q1–Q5, with one sized action per segment |
-| `docs/Walkthrough.md` | Full ground-up explanation; must be kept updated |
+| `docs/Walkthrough.md` | The user's private interview-prep notes (git-ignored, local only). Written for a beginner: every term explained, decisions and their reasons, likely interview questions. Keep it updated after each step; never link or commit it |
 | `docs/outputs/` | Saved outputs of every SQL script and the notebook (the source of truth for numbers) |
 | `README.md` | Has a screenshot placeholder table to replace with real images |
 | `steps.md` | The user's checklist for the Windows work |

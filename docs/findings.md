@@ -3,7 +3,7 @@
 ## Scope of the figures
 - Customer-attributed completed purchases only: 779,425 lines, 5,878 customers and £17,374,804.27, covering 1 Dec 2009 to 9 Dec 2011.
 - Reference date for recency and churn: 10 Dec 2011.
-- Sources: `docs/outputs/03_explore.txt`, `docs/outputs/rfm_notebook.txt`, and the ad hoc `customer_rfm` queries recorded in `docs/Walkthrough.md`.
+- Sources: `docs/outputs/03_explore.txt`, `docs/outputs/rfm_notebook.txt`, and the ad hoc `customer_rfm` queries listed under Supporting queries below.
 
 ## 1. Who are the most valuable customers?
 - **Champions:** 1,476 customers (25.1%) generate £12,001,386.40, which is **69.1% of revenue**. They average 15.68 invoices and £8,131.02 each, and last bought 20.69 days ago on average.
@@ -53,3 +53,20 @@
 **Country actions:**
 - Treat the 6 active Dutch accounts (£538,220.59) and the 5 EIRE accounts (£616,570.54) as key accounts. Losing any one of them would show up in total revenue.
 - Use Germany and France as reference markets for retention practice.
+
+## Supporting queries
+Ad hoc queries on `customer_rfm` (and `analysis_ready` for the last row), run against the tables produced by the notebook:
+
+| Query | Result |
+|---|---|
+| At Risk with M = 5 | 97 customers, £832,906.23 |
+| At Risk by recency | 191–365 days: 368 customers, £784,634.10. Over 365 days: 453, £801,725.02 |
+| Champions with M = 5 | 833 customers, £10,908,425.05 |
+| Champions with R = 4 (22–59 days) | 624 customers, £3,017,715.95 |
+| Loyal, churned | 445 customers, £1,051,620.05, recency 92–190 days |
+| Loyal, active | 785 customers, £1,484,395.23 |
+| New with one order | 237 customers, £80,505.44, £339.69 average |
+| Netherlands | 16 churned customers, £15,817.50. 6 active, £538,220.59 |
+| UK vs non-UK | churn 51.2% vs 47.7%. Average customer value £2,689.61 vs £5,654.11 |
+| Frequency values split across two F scores | 1 invoice: 1,623 customers; 2: 944; 4: 486; 8: 172 |
+| Largest lines for customer 16446 | invoice 581483, 9 Dec 2011: 80,995 × PAPER CRAFT, LITTLE BIRDIE at £2.08 = £168,469.60 |

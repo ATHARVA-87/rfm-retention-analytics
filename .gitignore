@@ -7,3 +7,6 @@ __pycache__/
 .pbi/
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
+
+# Personal interview-prep notes (kept local)
+docs/Walkthrough.md
