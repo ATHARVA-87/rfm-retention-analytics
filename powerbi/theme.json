@@ -60,8 +60,8 @@
     },
     "page": {
       "*": {
-        "background": [{ "color": { "solid": { "color": "#F8F5EF" } }, "transparency": 0 }],
-        "outspace": [{ "color": { "solid": { "color": "#F8F5EF" } } }]
+        "background": [{ "color": { "solid": { "color": "#FFFFFF" } }, "transparency": 0 }],
+        "outspace": [{ "color": { "solid": { "color": "#FFFFFF" } } }]
       }
     },
     "cardVisual": {
