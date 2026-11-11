@@ -17,7 +17,7 @@ The five business questions are in `docs/BRD.md`.
 - **After each step:** summarise what was done with numbers, and update `docs/Walkthrough.md` (section 8 covers Power BI).
 - **Git:** commit locally after each step. Push only at major milestones: (a) model + measures verified, (b) dashboard finished with screenshots and README updated.
 - **Writing style:** precise, no filler, no over-commenting, no emoji. Design must follow `powerbi/theme.json`:
-  - neutral base, teal `#0F766E` as the single accent, orange-red `#C2410C` only for risk;
+  - warm ivory base `#F8F5EF`, oxblood `#6E1E2B` as the main colour, antique gold `#B08A3E` as the one secondary accent, vermilion `#D6452B` only for risk. The user chose this palette on 2026-11-11, replacing the original teal `#0F766E` / orange-red `#C2410C`. The notebook figures are still teal;
   - segment colours as listed in `powerbi/layout_spec.md`;
   - no gradients, decorative visuals or default palettes.
 - **Keep the credit lines:**

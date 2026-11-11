@@ -125,3 +125,8 @@ createOrReplace
 			formatString: #,0
 			displayFolder: 4 Segment
 
+		measure 'Segment Colour' =
+				VAR s = COALESCE ( SELECTEDVALUE ( customer_rfm[segment] ), SELECTEDVALUE ( segment_rules[segment] ) )
+				RETURN LOOKUPVALUE ( segment_rules[Segment Colour], segment_rules[segment], s )
+			displayFolder: 5 Formatting
+

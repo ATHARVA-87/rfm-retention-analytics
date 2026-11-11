@@ -171,7 +171,7 @@ DEFINE
 
     ---------------- Titles ----------------
     MEASURE analysis_ready[Trend Title] =
-        "Monthly " & LOWER ( SELECTEDVALUE ( 'Metric Toggle'[Metric Toggle], "Revenue (£)" ) )
+        IF ( SELECTEDVALUE ( 'Metric Toggle'[Metric Toggle Order], 0 ) = 1, "Monthly customers", "Monthly revenue (£)" )
 
 EVALUATE
     ROW (
@@ -228,6 +228,8 @@ Metric Toggle = {
     ( "Customers",   NAMEOF ( 'analysis_ready'[Total Customers] ),   1 )
 }
 ```
+
+`Trend Title` reads `Metric Toggle Order`, not the label column. The label column is grouped by the hidden fields column (a composite key), so `SELECTEDVALUE ( 'Metric Toggle'[Metric Toggle] )` fails with "Column [Metric Toggle] is part of composite key".
 
 Use `Metric Toggle[Metric Toggle]` as the Y-axis of the trend line. Make its slicer single-select, shown as tiles. Set the line chart's title to the `Trend Title` measure: Title → `fx` → Field value.
 

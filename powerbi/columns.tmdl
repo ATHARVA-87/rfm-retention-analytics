@@ -1,0 +1,48 @@
+createOrReplace
+
+	ref table segment_rules
+
+		column 'Segment Colour' =
+				SWITCH (
+					segment_rules[segment],
+					"Champions", "#6E1E2B",
+					"Loyal", "#A35560",
+					"New", "#B08A3E",
+					"Needs Attention", "#D9B86C",
+					"At Risk", "#D6452B",
+					"Lost", "#8C8580"
+				)
+			dataType: string
+			summarizeBy: none
+
+		column 'R Range' =
+				IF (
+					segment_rules[r_min] = segment_rules[r_max],
+					FORMAT ( segment_rules[r_min], "0" ),
+					segment_rules[r_min] & "–" & segment_rules[r_max]
+				)
+			dataType: string
+			summarizeBy: none
+
+		column 'F Range' =
+				IF (
+					segment_rules[f_min] = segment_rules[f_max],
+					FORMAT ( segment_rules[f_min], "0" ),
+					segment_rules[f_min] & "–" & segment_rules[f_max]
+				)
+			dataType: string
+			summarizeBy: none
+
+		column Action =
+				SWITCH (
+					segment_rules[segment],
+					"Champions", "Account management for top spenders; alert at 60 days without an order",
+					"Loyal", "Re-order reminder and volume pricing for those past 90 days; cross-sell the rest",
+					"New", "Second-order offer to one-order customers",
+					"Needs Attention", "Automated reminder emails, no discounts",
+					"At Risk", "Personal win-back for high spenders; time-limited offer for those lapsed under a year",
+					"Lost", "One reactivation email, then suppress from paid campaigns"
+				)
+			dataType: string
+			summarizeBy: none
+
