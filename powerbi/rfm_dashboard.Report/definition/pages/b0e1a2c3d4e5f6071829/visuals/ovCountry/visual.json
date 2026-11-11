@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "ovCountry",
   "position": {
     "x": 24,
@@ -27,8 +27,25 @@
                 }
               },
               "queryRef": "customer_rfm.country",
-              "nativeQueryRef": "country",
-              "active": true
+              "nativeQueryRef": "country"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Total Revenue (£)"
+                }
+              },
+              "queryRef": "analysis_ready.Total Revenue (£)",
+              "nativeQueryRef": "Total Revenue (£)"
             }
           ]
         },
@@ -75,24 +92,6 @@
               },
               "queryRef": "analysis_ready.Churned %",
               "nativeQueryRef": "Churned %"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Total Revenue (£)"
-                }
-              },
-              "queryRef": "analysis_ready.Total Revenue (£)",
-              "nativeQueryRef": "Total Revenue (£)"
             }
           ]
         }
@@ -324,6 +323,7 @@
           "From": [
             {
               "Name": "subquery",
+              "Type": 2,
               "Expression": {
                 "Subquery": {
                   "Query": {
@@ -371,8 +371,7 @@
                     "Top": 10
                   }
                 }
-              },
-              "Type": 2
+              }
             },
             {
               "Name": "c",
@@ -406,62 +405,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "295473214319d6b02085",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Total Revenue (£)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "a0bcd5bd3dad926a4690",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Total Customers"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "d493341255258e0ed3cd",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Avg Order Value (£)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "102c3f9f699504809c40",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Churned %"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "ovNewRet",
   "position": {
     "x": 440,
@@ -27,26 +27,7 @@
                 }
               },
               "queryRef": "Date.Year Quarter",
-              "nativeQueryRef": "Year Quarter",
-              "active": true
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Returning %"
-                }
-              },
-              "queryRef": "analysis_ready.Returning %",
-              "nativeQueryRef": "Returning %"
+              "nativeQueryRef": "Year Quarter"
             }
           ]
         },
@@ -79,6 +60,24 @@
               },
               "queryRef": "analysis_ready.Returning Customers",
               "nativeQueryRef": "Returning Customers"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Returning %"
+                }
+              },
+              "queryRef": "analysis_ready.Returning %",
+              "nativeQueryRef": "Returning %"
             }
           ]
         }
@@ -202,7 +201,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'New = first purchase in the data, which starts Dec 2009, so early quarters overstate new'"
+                  "Value": "'New = first purchase since Dec 2009 (data start)'"
                 }
               }
             },

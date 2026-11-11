@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "slQuarter",
   "position": {
     "x": 208,
@@ -28,7 +28,6 @@
               },
               "queryRef": "Date.Quarter",
               "nativeQueryRef": "Quarter",
-              "active": true,
               "displayName": "Quarter"
             }
           ]

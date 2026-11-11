@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "rfTable",
   "position": {
     "x": 24,
     "y": 476,
     "z": 1000,
     "height": 228,
-    "width": 1233,
+    "width": 1232,
     "tabOrder": 1000
   },
   "visual": {
@@ -178,12 +178,13 @@
                     "Entity": "segment_rules"
                   }
                 },
-                "Property": "Action"
+                "Property": "segment"
               }
             },
-            "direction": "Descending"
+            "direction": "Ascending"
           }
-        ]
+        ],
+        "isDefaultSort": true
       }
     },
     "objects": {
@@ -392,6 +393,55 @@
           }
         }
       ],
+      "dataBars": [
+        {
+          "properties": {
+            "positiveColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D6452B'"
+                    }
+                  }
+                }
+              }
+            },
+            "negativeColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D6452B'"
+                    }
+                  }
+                }
+              }
+            },
+            "axisColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E8E1D6'"
+                    }
+                  }
+                }
+              }
+            },
+            "hideText": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Churned %"
+          }
+        }
+      ],
       "grid": [
         {
           "properties": {
@@ -399,20 +449,6 @@
               "expr": {
                 "Literal": {
                   "Value": "2D"
-                }
-              }
-            },
-            "gridHorizontalWeight": {
-              "expr": {
-                "Literal": {
-                  "Value": "1D"
-                }
-              }
-            },
-            "gridVertical": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
                 }
               }
             }
@@ -482,149 +518,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "fcbd6dfa5e00ae025753",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "segment_rules"
-              }
-            },
-            "Property": "segment"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "c87b19614d1a7a30275b",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Total Customers"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "ad1883eb836c9883a071",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Customer Share %"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "927888d1cb00b8a97373",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Total Revenue (£)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "41a9aa8358b4687b5ecd",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Revenue Share %"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "b4555f1a2ade08c0034d",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Avg Recency (days)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "3d7cc793a9d27579c06a",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Avg Frequency (invoices)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "ae7d1f5796b8073b86e0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Avg Monetary (£)"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "60433ca89b5b246c8a93",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "analysis_ready"
-              }
-            },
-            "Property": "Churned %"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "068dea84c34b2eed56c0",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "segment_rules"
-              }
-            },
-            "Property": "Action"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

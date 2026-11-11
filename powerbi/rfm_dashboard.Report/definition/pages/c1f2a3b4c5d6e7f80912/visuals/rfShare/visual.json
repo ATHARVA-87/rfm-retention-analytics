@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "rfShare",
   "position": {
     "x": 24,
@@ -27,8 +27,7 @@
                 }
               },
               "queryRef": "segment_rules.segment",
-              "nativeQueryRef": "segment",
-              "active": true
+              "nativeQueryRef": "segment"
             }
           ]
         },

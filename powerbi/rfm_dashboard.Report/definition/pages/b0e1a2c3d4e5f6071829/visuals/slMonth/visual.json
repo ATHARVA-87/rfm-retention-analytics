@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "slMonth",
   "position": {
     "x": 392,
@@ -28,7 +28,6 @@
               },
               "queryRef": "Date.Month",
               "nativeQueryRef": "Month",
-              "active": true,
               "displayName": "Month"
             }
           ]

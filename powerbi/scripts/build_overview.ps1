@@ -196,6 +196,7 @@ function SetSubtitle($page, $name, $text) {
         show = (Bool $true); text = (Str $text); fontColor = (Col '#7A6E66'); fontSize = (Num 8) } })
     Save $p $j
 }
-SetSubtitle $ov 'ovTrend' 'Dec 2009 starts on the 1st; Dec 2011 covers 1–9 Dec only'
+TextBox $ov 'ovTrendNote' (Pos 272 212 560 40) -Transparent @(Para @(Run 'Monthly points: Dec 2011 covers 1–9 Dec only, so its drop is partial, not a collapse.' 8 '#7A6E66') 'right') -PadTop 14
 SetSubtitle $ov 'ovQuarter' '2009 = December only; Q4 2011 runs to 9 Dec'
-SetSubtitle $ov 'ovNewRet' 'New = first purchase in the data, which starts Dec 2009, so early quarters overstate new'
+SetSubtitle $ov 'ovNewRet' 'New = first purchase since Dec 2009 (data start)'
+

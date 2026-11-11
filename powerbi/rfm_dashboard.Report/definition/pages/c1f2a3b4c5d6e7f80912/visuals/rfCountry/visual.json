@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "rfCountry",
   "position": {
     "x": 912,
@@ -27,8 +27,25 @@
                 }
               },
               "queryRef": "customer_rfm.country",
-              "nativeQueryRef": "country",
-              "active": true
+              "nativeQueryRef": "country"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Churned %"
+                }
+              },
+              "queryRef": "analysis_ready.Churned %",
+              "nativeQueryRef": "Churned %"
             }
           ]
         },
@@ -61,24 +78,6 @@
               },
               "queryRef": "analysis_ready.Revenue from Churned (£)",
               "nativeQueryRef": "Revenue from Churned (£)"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Churned %"
-                }
-              },
-              "queryRef": "analysis_ready.Churned %",
-              "nativeQueryRef": "Churned %"
             }
           ]
         }
