@@ -1,0 +1,97 @@
+table Date
+	lineageTag: 34a370f4-3405-4bb7-956b-2cec7d21bb5e
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: Long Date
+		lineageTag: bb13a8ae-2acf-4e69-859a-54da2d13bcef
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		formatString: 0
+		lineageTag: f7104c20-142d-4aae-8019-422db18feae4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: ec7c67b0-eb27-4934-a3ee-b97535bab6b3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Quarter'
+		lineageTag: 741cb00d-8e8d-4d85-b767-45e4ffad8c89
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: f470a731-3cb2-46f3-9d49-35b95887747d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: c68d606f-4c8b-4ffe-a92b-50bfc86f00e1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month'
+		lineageTag: 4967ba06-60d9-4e76-8c3e-1ac59ad4f935
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month]
+		sortByColumn: 'Year Month Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Year Month Sort'
+		formatString: 0
+		lineageTag: 45d519ef-19b4-44c7-9451-fdc78f9a8b43
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source =
+				
+				VAR FirstDay = DATE ( YEAR ( MIN ( analysis_ready[invoice_day] ) ), MONTH ( MIN ( analysis_ready[invoice_day] ) ), 1 )
+				VAR LastDay  = EOMONTH ( MAX ( analysis_ready[invoice_day] ), 0 )
+				RETURN
+				    ADDCOLUMNS (
+				        CALENDAR ( FirstDay, LastDay ),
+				        "Year", YEAR ( [Date] ),
+				        "Quarter", "Q" & QUARTER ( [Date] ),
+				        "Year Quarter", YEAR ( [Date] ) & "-Q" & QUARTER ( [Date] ),
+				        "Month Number", MONTH ( [Date] ),
+				        "Month", FORMAT ( [Date], "mmm" ),
+				        "Year Month", FORMAT ( [Date], "yyyy-mm" ),
+				        "Year Month Sort", YEAR ( [Date] ) * 100 + MONTH ( [Date] )
+				    )
+
+	annotation PBI_Id = b32fa21fa8764c7b899b92d6c9de050b
+

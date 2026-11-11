@@ -46,7 +46,7 @@ If VOLUME is read-only, Windows Fast Startup is on. Use a USB stick or Google Dr
   - Log in as `postgres` with your password. Untick encryption if asked.
 - [ ] Tick `analysis_ready`, `customer_rfm` and `segment_rules`, then **Load**.
 - [ ] **View → Themes → Browse for themes** → `powerbi\theme.json`.
-- [ ] Save as `powerbi\rfm_dashboard.pbix`. Keep saving often.
+- [ ] Save as a Power BI Project: `powerbi\rfm_dashboard.pbip` (File → Save as → *.pbip). Close Desktop before running `powerbi\scripts\build_report.ps1`.
 
 ## 5. Model and measures (~30 min). Follow `powerbi\dax_measures.md`.
 - [ ] **Model view: relationships.** All single direction, one-to-many:
@@ -83,7 +83,7 @@ If VOLUME is read-only, Windows Fast Startup is on. Use a USB stick or Google Dr
 - [ ] File → Export → PDF → `docs\img\dashboard.pdf`.
 - [ ] Take one screenshot per page: `docs\img\home.png`, `docs\img\overview.png`, `docs\img\rfm.png`.
 - [ ] Ask Claude Code to update the README screenshot section and `docs\Walkthrough.md` section 8.
-- [ ] Decide whether the .pbix goes on GitHub. If yes, delete the `*.pbix` line in `.gitignore`.
+- [ ] The PBIP folder and `powerbi\scripts\` go on GitHub; the .pbix and the model data cache stay git-ignored.
 - [ ] Commit and push:
   ```powershell
   git add -A; git commit -m "Add Power BI dashboard, screenshots and PDF"; git push

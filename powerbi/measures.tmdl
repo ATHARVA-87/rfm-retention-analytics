@@ -130,3 +130,22 @@ createOrReplace
 				RETURN LOOKUPVALUE ( segment_rules[Segment Colour], segment_rules[segment], s )
 			displayFolder: 5 Formatting
 
+		measure 'Champions Revenue Label' = "£" & FORMAT ( DIVIDE ( [Champions Revenue (£)], 1000000 ) + 0, "0.00" ) & "M from Champions"
+			displayFolder: 6 Labels
+
+		measure 'At Risk Revenue Label' = "£" & FORMAT ( DIVIDE ( [At Risk Revenue (£)], 1000000 ) + 0, "0.00" ) & "M past revenue at risk"
+			displayFolder: 6 Labels
+
+		measure 'Loyal Churned Revenue Label' = "£" & FORMAT ( DIVIDE ( [Loyal Churned Revenue (£)], 1000000 ) + 0, "0.00" ) & "M held by lapsing Loyal"
+			displayFolder: 6 Labels
+
+		measure 'Churned Revenue Label' = "£" & FORMAT ( DIVIDE ( [Revenue from Churned (£)], 1000000 ) + 0, "0.00" ) & "M from churned customers"
+			displayFolder: 6 Labels
+
+		measure 'Churn Bar Colour' = IF ( [Churned %] > CALCULATE ( [Churned %], REMOVEFILTERS ( customer_rfm[country] ) ), "#D6452B", "#DDD6CC" )
+			displayFolder: 5 Formatting
+
+		measure 'RF Cell Font' =
+				VAR m = MAXX ( ALLSELECTED ( customer_rfm[r_score], customer_rfm[f_score] ), CALCULATE ( [Total Customers] ) )
+				RETURN IF ( DIVIDE ( [Total Customers], m ) > 0.55, "#FFFFFF", "#2A1E1A" )
+			displayFolder: 5 Formatting

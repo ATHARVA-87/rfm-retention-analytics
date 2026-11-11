@@ -132,6 +132,14 @@ Screenshots, once built (placeholders):
 |---|---|---|
 | `docs/img/home.png` | `docs/img/overview.png` | `docs/img/rfm.png` |
 
+## Limitations
+- **Customer-attributed revenue only.** 228,487 completed-purchase lines without a Customer ID (£3,090,394.12, 15.1% of purchase revenue) are excluded, because RFM needs a customer. "Total revenue" in this project means customer-attributed revenue.
+- **Cancellations are dropped, not netted.** Many cancellations have no matching order inside the data window, so netting would push some customers below zero. As a result, an order that was placed and later cancelled still counts. The largest single line, 80,995 units for £168,469.60 by customer 16446 on 9 Dec 2011 (invoice 581483), makes that customer the 8th largest by revenue with only 2 orders. Whether it was cancelled can be checked in `retail_dedup` on the Linux database. Without it, 2011 AOV is £475.65 instead of £485.45.
+- **Frequency ties are split by row order.** Frequency is heavily tied, so customers are ranked with `method='first'` before quintiles. 3,225 customers sit on a frequency value that spans two F scores (1, 2, 4 and 8 invoices). Only the ties at 2 invoices (944 customers) and 4 invoices (486) can change a segment, so up to 1,430 customers have a segment that depends on tie order.
+- **The data window shapes retention figures.** The data starts on 1 Dec 2009, so a customer can only be "returning" if they bought since then. Returning % rises and new counts fall partly because the look-back window grows. 2009-Q4 is 100% new by construction.
+- **Partial periods.** 2009 is December only, and 2011 ends on 9 Dec. Year comparisons use Jan–Nov; charts label the partial periods.
+- **Churn is a snapshot, with a fixed 90-day threshold.** It isn't tuned to wholesale buying cycles. Because it is a recency rule, churn by segment is largely determined by the R score: Champions and New are never churned; At Risk and Lost always are. Only the R = 3 band (60–190 days) splits.
+- **Two country definitions.** Dashboard slicers and customer counts use each customer's primary country (13 customers bought under two countries). Some SQL figures, such as market revenue and AOV, use the country on each transaction line.
 ## How to reproduce
 Requirements: Docker, Conda, and about 2 GB of free disk space.
 

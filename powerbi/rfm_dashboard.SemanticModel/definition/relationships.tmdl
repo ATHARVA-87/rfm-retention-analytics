@@ -1,0 +1,12 @@
+relationship AutoDetected_f1161dc3-2541-4370-9cc1-ac5e17abe0b0
+	fromColumn: analysis_ready.customer_id
+	toColumn: customer_rfm.customer_id
+
+relationship AutoDetected_7b22f335-d3ee-44f8-9eb4-9ccaeabcf6d8
+	fromColumn: customer_rfm.segment
+	toColumn: segment_rules.segment
+
+relationship dace4a85-ac42-6631-21ef-5db0b1658e87
+	fromColumn: analysis_ready.invoice_day
+	toColumn: Date.Date
+

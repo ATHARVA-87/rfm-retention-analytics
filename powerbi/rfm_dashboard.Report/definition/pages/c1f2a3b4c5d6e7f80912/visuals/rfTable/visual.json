@@ -1,0 +1,630 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "rfTable",
+  "position": {
+    "x": 24,
+    "y": 476,
+    "z": 1000,
+    "height": 228,
+    "width": 1233,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "segment_rules"
+                    }
+                  },
+                  "Property": "segment"
+                }
+              },
+              "queryRef": "segment_rules.segment",
+              "nativeQueryRef": "segment",
+              "displayName": "Segment"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Total Customers"
+                }
+              },
+              "queryRef": "analysis_ready.Total Customers",
+              "nativeQueryRef": "Total Customers",
+              "displayName": "Customers"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Customer Share %"
+                }
+              },
+              "queryRef": "analysis_ready.Customer Share %",
+              "nativeQueryRef": "Customer Share %",
+              "displayName": "Cust. share"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Total Revenue (£)"
+                }
+              },
+              "queryRef": "analysis_ready.Total Revenue (£)",
+              "nativeQueryRef": "Total Revenue (£)",
+              "displayName": "Revenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Revenue Share %"
+                }
+              },
+              "queryRef": "analysis_ready.Revenue Share %",
+              "nativeQueryRef": "Revenue Share %",
+              "displayName": "Rev. share"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Avg Recency (days)"
+                }
+              },
+              "queryRef": "analysis_ready.Avg Recency (days)",
+              "nativeQueryRef": "Avg Recency (days)",
+              "displayName": "Recency (d)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Avg Frequency (invoices)"
+                }
+              },
+              "queryRef": "analysis_ready.Avg Frequency (invoices)",
+              "nativeQueryRef": "Avg Frequency (invoices)",
+              "displayName": "Frequency"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Avg Monetary (£)"
+                }
+              },
+              "queryRef": "analysis_ready.Avg Monetary (£)",
+              "nativeQueryRef": "Avg Monetary (£)",
+              "displayName": "Monetary"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Churned %"
+                }
+              },
+              "queryRef": "analysis_ready.Churned %",
+              "nativeQueryRef": "Churned %",
+              "displayName": "Churned %"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "segment_rules"
+                    }
+                  },
+                  "Property": "Action"
+                }
+              },
+              "queryRef": "segment_rules.Action",
+              "nativeQueryRef": "Action",
+              "displayName": "Action"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "segment_rules"
+                  }
+                },
+                "Property": "Action"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "values": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "analysis_ready"
+                        }
+                      },
+                      "Property": "Segment Colour"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "segment_rules.segment"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "112D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "segment_rules.segment"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "70D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Total Customers"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Customer Share %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "86D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Total Revenue (£)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "66D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Revenue Share %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Avg Recency (days)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "76D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Avg Frequency (invoices)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "70D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Avg Monetary (£)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "84D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "analysis_ready.Churned %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "484D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "segment_rules.Action"
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            },
+            "gridHorizontalWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segment summary and recommended action'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "spacing": [
+        {
+          "properties": {
+            "spaceAbovePlotArea": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "fcbd6dfa5e00ae025753",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "segment_rules"
+              }
+            },
+            "Property": "segment"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "c87b19614d1a7a30275b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Total Customers"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "ad1883eb836c9883a071",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Customer Share %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "927888d1cb00b8a97373",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Total Revenue (£)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "41a9aa8358b4687b5ecd",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Revenue Share %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b4555f1a2ade08c0034d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Avg Recency (days)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "3d7cc793a9d27579c06a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Avg Frequency (invoices)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "ae7d1f5796b8073b86e0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Avg Monetary (£)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "60433ca89b5b246c8a93",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "analysis_ready"
+              }
+            },
+            "Property": "Churned %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "068dea84c34b2eed56c0",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "segment_rules"
+              }
+            },
+            "Property": "Action"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+table 'Metric Toggle'
+	lineageTag: 7c52d9db-6b2c-437a-b04b-d8d501042d92
+
+	measure 'Trend Title' = IF ( SELECTEDVALUE ( 'Metric Toggle'[Metric Toggle Order], 0 ) = 1, "Monthly customers", "Monthly revenue (£)" )
+		lineageTag: 3e31d952-8beb-4f53-973e-5e9ab4b8c5b0
+
+	column 'Metric Toggle'
+		lineageTag: 9701782d-f476-4e05-b70f-b46e14f44ade
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric Toggle Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric Toggle Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Toggle Fields'
+		isHidden
+		lineageTag: 8e03b2c5-9f0b-4db4-88e7-06ca91c2f817
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric Toggle Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Metric Toggle Order'
+		isHidden
+		formatString: 0
+		lineageTag: 2d6d95ff-548c-49ad-bef0-63e8e1297940
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Metric Toggle' = calculated
+		mode: import
+		source =
+				{
+				    ("Revenue (£)", NAMEOF('analysis_ready'[Total Revenue (£)]), 0),
+				    ("Customers", NAMEOF('analysis_ready'[Total Customers]), 1)
+				}
+
+	annotation PBI_Id = f2ba0415364f479696518cb04a76c7fe
+

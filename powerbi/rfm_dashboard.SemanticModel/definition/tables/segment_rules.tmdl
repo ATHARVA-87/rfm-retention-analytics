@@ -1,0 +1,126 @@
+table segment_rules
+	lineageTag: a4eb2695-e942-470c-a572-9eb7acc6fa06
+
+	column segment_order
+		dataType: int64
+		formatString: 0
+		lineageTag: e99f9f0c-599e-4c23-adba-929ca56a42b2
+		summarizeBy: none
+		sourceColumn: segment_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		lineageTag: dfffddec-6c8c-4a30-a775-8dc75d553108
+		summarizeBy: none
+		sourceColumn: segment
+		sortByColumn: segment_order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column r_min
+		dataType: int64
+		formatString: 0
+		lineageTag: fe88d470-dd80-4714-b0b4-0392b62948ff
+		summarizeBy: none
+		sourceColumn: r_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column r_max
+		dataType: int64
+		formatString: 0
+		lineageTag: 483307a5-54b7-4c14-a21c-7cc8ea0533df
+		summarizeBy: none
+		sourceColumn: r_max
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_min
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f8fe38d-3df5-487f-bad4-18beab5a65d8
+		summarizeBy: none
+		sourceColumn: f_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_max
+		dataType: int64
+		formatString: 0
+		lineageTag: a3a523d4-de88-4e54-86c5-46f9c8564bd6
+		summarizeBy: none
+		sourceColumn: f_max
+
+		annotation SummarizationSetBy = Automatic
+
+	column meaning
+		dataType: string
+		lineageTag: fb6df7f5-ff8b-443f-a796-8b46c3e410a9
+		summarizeBy: none
+		sourceColumn: meaning
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Segment Colour' =
+			SWITCH (
+				segment_rules[segment],
+				"Champions", "#6E1E2B",
+				"Loyal", "#A35560",
+				"New", "#B08A3E",
+				"Needs Attention", "#D9B86C",
+				"At Risk", "#D6452B",
+				"Lost", "#8C8580"
+			)
+		dataType: string
+		lineageTag: e2e99fef-a956-4d4f-a743-5e3421268f97
+		summarizeBy: none
+
+	column 'R Range' =
+			IF (
+				segment_rules[r_min] = segment_rules[r_max],
+				FORMAT ( segment_rules[r_min], "0" ),
+				segment_rules[r_min] & "–" & segment_rules[r_max]
+			)
+		dataType: string
+		lineageTag: 4107deba-cd2e-4836-9d7e-eea525463f4c
+		summarizeBy: none
+
+	column 'F Range' =
+			IF (
+				segment_rules[f_min] = segment_rules[f_max],
+				FORMAT ( segment_rules[f_min], "0" ),
+				segment_rules[f_min] & "–" & segment_rules[f_max]
+			)
+		dataType: string
+		lineageTag: 68201e99-2ee7-4fd4-825e-2829f56294c4
+		summarizeBy: none
+
+	column Action =
+			SWITCH (
+				segment_rules[segment],
+				"Champions", "Account management for top spenders; alert at 60 days without an order",
+				"Loyal", "Re-order reminder and volume pricing for those past 90 days; cross-sell the rest",
+				"New", "Second-order offer to one-order customers",
+				"Needs Attention", "Automated reminder emails, no discounts",
+				"At Risk", "Personal win-back for high spenders; time-limited offer for those lapsed under a year",
+				"Lost", "One reactivation email, then suppress from paid campaigns"
+			)
+		dataType: string
+		lineageTag: 7bc3964c-edd6-490c-96f2-aa35382d049b
+		summarizeBy: none
+
+	partition segment_rules = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost", "retail"),
+				  #"Navigation 1" = Source{[Schema = "public", Item = "segment_rules"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

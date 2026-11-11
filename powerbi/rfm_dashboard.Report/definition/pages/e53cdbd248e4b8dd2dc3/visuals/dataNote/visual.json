@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "dataNote",
+  "position": {
+    "x": 24,
+    "y": 560,
+    "z": 1000,
+    "height": 120,
+    "width": 1232,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Source: ",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "Online Retail II, UCI Machine Learning Repository, donated by Daqing Chen, CC BY 4.0.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Cleaning: ",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "1,067,371 raw rows → 779,425 customer purchase lines. Excluded: duplicates, cancellations, adjustments, zero/negative lines, and rows without a Customer ID (15.1% of purchase revenue).",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Scope: ",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38",
+                      "fontWeight": "bold"
+                    }
+                  },
+                  {
+                    "value": "revenue and customer figures cover customer-attributed purchases only. Churn is a snapshot at 10 Dec 2011: with a date filter, Churned % is the share of that period's buyers who are churned now.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#4A3F38"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Methodology inspired by Mansi Goel's public tutorial; rebuilt independently in PostgreSQL and Python.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "9pt",
+                      "color": "#7A6E66"
+                    }
+                  }
+                ],
+                "horizontalTextAlignment": "left"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

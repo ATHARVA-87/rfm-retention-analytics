@@ -45,7 +45,7 @@ The database runs in Docker on the Linux side. Pick one option.
 - **Colour use** (oxblood and gold palette, chosen 2026-11-11; it replaces the original teal palette):
   - page `#F8F5EF` warm ivory, panels white, text `#2A1E1A`, muted text `#7A6E66`;
   - oxblood `#6E1E2B` for the main measure; antique gold `#B08A3E` as the single secondary accent (header rule, New customers);
-  - segment colours only where segments are compared: Champions `#6E1E2B`, Loyal `#A35560`, New `#B08A3E`, Needs Attention `#D9B86C`, At Risk `#D6452B`, Lost `#8C8580`;
+  - segment colours only where segments are compared: Champions `#6E1E2B`, Loyal `#A35560`, New `#B08A3E`, Needs Attention `#BF9440`, At Risk `#D6452B`, Lost `#8C8580`;
   - vermilion `#D6452B` only for churn and risk. It is kept bright so it reads apart from the dark oxblood;
   - everything else neutral.
 

@@ -1,0 +1,154 @@
+table customer_rfm
+	lineageTag: 043a3e6f-cc3b-47a6-adbc-1b65e05ed37b
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ac498b9f-c493-4c7e-b792-94632e5a9e13
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: b327ef2b-967c-45c6-be1c-0ce0258a53b7
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_purchase
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 65c1aa8d-2b7c-4bc9-8ad3-df37ecf0cd73
+		summarizeBy: none
+		sourceColumn: first_purchase
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column last_purchase
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a6f2b6ac-da35-44ca-b541-b3e2f6ba39bb
+		summarizeBy: none
+		sourceColumn: last_purchase
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column recency_days
+		dataType: int64
+		formatString: 0
+		lineageTag: ff2e2880-b1d9-41ef-b851-413423331b40
+		summarizeBy: sum
+		sourceColumn: recency_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column frequency
+		dataType: int64
+		formatString: 0
+		lineageTag: f2d5c7e1-025f-46de-a7aa-d9a08c7257fc
+		summarizeBy: sum
+		sourceColumn: frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column monetary
+		dataType: double
+		lineageTag: 82e48636-23a4-4e8c-86e1-2138450bfe33
+		summarizeBy: sum
+		sourceColumn: monetary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column r_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 99432568-744c-405f-bef8-14e7d9f11fb1
+		summarizeBy: sum
+		sourceColumn: r_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_score
+		dataType: int64
+		formatString: 0
+		lineageTag: fc51a71c-3abf-40f6-b1c1-8a0da39dd011
+		summarizeBy: sum
+		sourceColumn: f_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column m_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f8ed0d3-b87f-4f8f-9b84-288195efdcfd
+		summarizeBy: sum
+		sourceColumn: m_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column rfm_score
+		dataType: string
+		lineageTag: d37852d1-333c-422f-9395-ab4534e3bb54
+		summarizeBy: none
+		sourceColumn: rfm_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		lineageTag: 569164da-3595-4f7d-a044-6b69e081a3a0
+		summarizeBy: none
+		sourceColumn: segment
+		sortByColumn: segment_order
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_order
+		dataType: int64
+		formatString: 0
+		lineageTag: 2e3af012-83cf-4388-b702-4dec2cbcc925
+		summarizeBy: sum
+		sourceColumn: segment_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_churned
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: cc3e64b5-80f1-4f5d-ab04-db85d9343cec
+		summarizeBy: none
+		sourceColumn: is_churned
+
+		annotation SummarizationSetBy = Automatic
+
+	column churn_status
+		dataType: string
+		lineageTag: 481d46f7-4b43-4da1-94ce-eea042d595de
+		summarizeBy: none
+		sourceColumn: churn_status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customer_rfm = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost", "retail"),
+				  #"Navigation 1" = Source{[Schema = "public", Item = "customer_rfm"]}[Data],
+				  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 1", {{"first_purchase", type date}, {"last_purchase", type date}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

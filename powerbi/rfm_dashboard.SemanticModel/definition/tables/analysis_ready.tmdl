@@ -1,0 +1,490 @@
+table analysis_ready
+	lineageTag: b0ebe8fb-45ae-47ab-8e16-3dda86954a27
+
+	measure 'Total Revenue (£)' = SUM ( analysis_ready[revenue] )
+		formatString: £#,0
+		displayFolder: 1 Core
+		lineageTag: 704ec1ed-2e71-4a9e-a2d4-b5786d030a6d
+
+	measure Orders = DISTINCTCOUNT ( analysis_ready[invoice] )
+		formatString: #,0
+		displayFolder: 1 Core
+		lineageTag: 7d745192-88e1-41be-9a94-df1ef26131aa
+
+	measure 'Total Customers' = DISTINCTCOUNT ( analysis_ready[customer_id] )
+		formatString: #,0
+		displayFolder: 1 Core
+		lineageTag: 320f2c76-a870-43a7-80dc-35a465e59edc
+
+	measure 'Avg Order Value (£)' = DIVIDE ( [Total Revenue (£)], [Orders] )
+		formatString: £#,0.00
+		displayFolder: 1 Core
+		lineageTag: ae258cc3-ac85-4664-be9d-f318340a3d2b
+
+	measure 'Avg Customer Value (£)' = DIVIDE ( [Total Revenue (£)], [Total Customers] )
+		formatString: £#,0.00
+		displayFolder: 1 Core
+		lineageTag: cfd7b9d5-c687-4111-ab78-1728417d25c8
+
+	measure 'Churned Customers' = CALCULATE ( [Total Customers], customer_rfm[is_churned] = TRUE () )
+		formatString: #,0
+		displayFolder: 1 Core
+		lineageTag: f6b49cfa-649f-4db4-9d56-8b94b98c0322
+
+	measure 'Active Customers' = [Total Customers] - [Churned Customers]
+		formatString: #,0
+		displayFolder: 1 Core
+		lineageTag: a176a6a5-9726-455a-84a7-bd1e55e8b8cc
+
+	measure 'Churned %' = DIVIDE ( [Churned Customers] + 0, [Total Customers] )
+		formatString: 0.0%
+		displayFolder: 1 Core
+		lineageTag: 10ca21f4-4ca0-4325-8be1-2ae225d11e0a
+
+	measure 'Revenue from Churned (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[is_churned] = TRUE () )
+		formatString: £#,0
+		displayFolder: 1 Core
+		lineageTag: a04695b0-98a8-4517-9899-da0e941c5b9d
+
+	measure 'Revenue Prev Month (£)' = CALCULATE ( [Total Revenue (£)], DATEADD ( 'Date'[Date], -1, MONTH ) )
+		formatString: £#,0
+		displayFolder: 2 Time
+		lineageTag: cb5fca7e-7ed9-4f04-b1fe-9356f8d95bda
+
+	measure 'Revenue MoM %' = DIVIDE ( [Total Revenue (£)] - [Revenue Prev Month (£)], [Revenue Prev Month (£)] )
+		formatString: 0.0%
+		displayFolder: 2 Time
+		lineageTag: 27e9cc15-15b9-4f80-867a-078a90ea2220
+
+	measure 'Revenue Same Period LY (£)' = CALCULATE ( [Total Revenue (£)], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+		formatString: £#,0
+		displayFolder: 2 Time
+		lineageTag: 18df00fb-4adb-4cd8-ba74-1fb7250d75b8
+
+	measure 'Revenue YoY %' = DIVIDE ( [Total Revenue (£)] - [Revenue Same Period LY (£)], [Revenue Same Period LY (£)] )
+		formatString: 0.0%
+		displayFolder: 2 Time
+		lineageTag: 5b9fde81-446a-41c9-8104-03d16b11da2f
+
+	measure 'New Customers' =
+			VAR PeriodStart = MIN ( 'Date'[Date] )
+			VAR PeriodEnd   = MAX ( 'Date'[Date] ) + 1
+			RETURN
+				COUNTROWS (
+					FILTER (
+						VALUES ( analysis_ready[customer_id] ),
+						VAR FirstPurchase =
+							LOOKUPVALUE ( customer_rfm[first_purchase], customer_rfm[customer_id], analysis_ready[customer_id] )
+						RETURN FirstPurchase >= PeriodStart && FirstPurchase < PeriodEnd
+					)
+				) + 0
+		formatString: #,0
+		displayFolder: 3 Retention
+		lineageTag: aafade09-cf01-4406-96f9-c82dd0c65de7
+
+	measure 'Returning Customers' = [Total Customers] - [New Customers]
+		formatString: #,0
+		displayFolder: 3 Retention
+		lineageTag: 010b48d0-abe7-4a69-af91-6f9c44dc30b7
+
+	measure 'Returning %' = DIVIDE ( [Returning Customers], [Total Customers] )
+		formatString: 0.0%
+		displayFolder: 3 Retention
+		lineageTag: 0658b10b-7352-440f-a632-2ff08488657b
+
+	measure 'Revenue Share %' = DIVIDE ( [Total Revenue (£)], CALCULATE ( [Total Revenue (£)], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+		formatString: 0.0%
+		displayFolder: 4 Segment
+		lineageTag: b0cb684a-b1fe-4585-b4bf-2122fb29f007
+
+	measure 'Customer Share %' = DIVIDE ( [Total Customers], CALCULATE ( [Total Customers], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+		formatString: 0.0%
+		displayFolder: 4 Segment
+		lineageTag: 9e40ffff-f911-4475-b33a-8e063c2a6eb3
+
+	measure 'Avg Recency (days)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[recency_days] ) ) )
+		formatString: #,0.0
+		displayFolder: 4 Segment
+		lineageTag: 8866d9d6-abee-44fc-8075-a64d363a5af9
+
+	measure 'Avg Frequency (invoices)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[frequency] ) ) )
+		formatString: #,0.0
+		displayFolder: 4 Segment
+		lineageTag: ce86c593-cdb0-4a82-8d11-cc662e6a573b
+
+	measure 'Avg Monetary (£)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[monetary] ) ) )
+		formatString: £#,0
+		displayFolder: 4 Segment
+		lineageTag: ef6a1410-b127-45e1-a4ce-7d734a431fb2
+
+	measure 'Champions Revenue (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[segment] = "Champions" )
+		formatString: £#,0
+		displayFolder: 4 Segment
+		lineageTag: f6deaa0c-582f-4bac-ac89-c0a328041698
+
+	measure 'Champions Revenue Share %' = DIVIDE ( [Champions Revenue (£)], CALCULATE ( [Total Revenue (£)], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+		formatString: 0.0%
+		displayFolder: 4 Segment
+		lineageTag: 867476e4-48ab-460e-8970-5daf28d86676
+
+	measure 'At Risk Customers' = CALCULATE ( [Total Customers], customer_rfm[segment] = "At Risk" )
+		formatString: #,0
+		displayFolder: 4 Segment
+		lineageTag: b6735970-a8e6-461c-9593-92a56be41eba
+
+	measure 'At Risk Revenue (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[segment] = "At Risk" )
+		formatString: £#,0
+		displayFolder: 4 Segment
+		lineageTag: 5a71de28-e668-4ada-bc37-338c228518b7
+
+	measure 'Loyal Churned Customers' = CALCULATE ( [Churned Customers], customer_rfm[segment] = "Loyal" )
+		formatString: #,0
+		displayFolder: 4 Segment
+		lineageTag: a04d0b9b-6fb1-4cc5-8c45-ce7b36289ccd
+
+	measure 'Loyal Churned Revenue (£)' = CALCULATE ( [Revenue from Churned (£)], customer_rfm[segment] = "Loyal" )
+		formatString: £#,0
+		displayFolder: 4 Segment
+		lineageTag: bc7caa01-2568-472b-99f7-23a7d6ad0283
+
+	measure 'Lost Customers' = CALCULATE ( [Total Customers], customer_rfm[segment] = "Lost" )
+		formatString: #,0
+		displayFolder: 4 Segment
+		lineageTag: 65126ca2-5a99-4e4e-a671-1997c31c5132
+
+	measure 'Segment Colour' =
+			VAR s = COALESCE ( SELECTEDVALUE ( customer_rfm[segment] ), SELECTEDVALUE ( segment_rules[segment] ) )
+			RETURN LOOKUPVALUE ( segment_rules[Segment Colour], segment_rules[segment], s )
+		displayFolder: 5 Formatting
+		lineageTag: e02ba1f1-722f-4403-9629-f80dd4faadd5
+
+	measure 'Champions Revenue Label' = "£" & FORMAT ( DIVIDE ( [Champions Revenue (£)], 1000000 ) + 0, "0.00" ) & "M from Champions"
+		displayFolder: 6 Labels
+		lineageTag: 8e3b0ae7-df2c-4835-996e-ed6e7867cb77
+
+	measure 'At Risk Revenue Label' = "£" & FORMAT ( DIVIDE ( [At Risk Revenue (£)], 1000000 ) + 0, "0.00" ) & "M past revenue at risk"
+		displayFolder: 6 Labels
+		lineageTag: ef2cac3e-de5e-40de-9dd3-d7ef5b85c344
+
+	measure 'Loyal Churned Revenue Label' = "£" & FORMAT ( DIVIDE ( [Loyal Churned Revenue (£)], 1000000 ) + 0, "0.00" ) & "M held by lapsing Loyal"
+		displayFolder: 6 Labels
+		lineageTag: 48d68230-e26b-4883-8add-cb97205645d9
+
+	measure 'Churned Revenue Label' = "£" & FORMAT ( DIVIDE ( [Revenue from Churned (£)], 1000000 ) + 0, "0.00" ) & "M from churned customers"
+		displayFolder: 6 Labels
+		lineageTag: 5a434c42-feb2-4db7-8f92-b122c40f7d4b
+
+	measure 'Churn Bar Colour' = IF ( [Churned %] > CALCULATE ( [Churned %], REMOVEFILTERS ( customer_rfm[country] ) ), "#D6452B", "#DDD6CC" )
+		displayFolder: 5 Formatting
+		lineageTag: 40d556ca-0201-4596-8462-435c6cfbcaba
+
+	measure 'RF Cell Font' =
+			VAR m = MAXX ( ALLSELECTED ( customer_rfm[r_score], customer_rfm[f_score] ), CALCULATE ( [Total Customers] ) )
+			RETURN IF ( DIVIDE ( [Total Customers], m ) > 0.55, "#FFFFFF", "#2A1E1A" )
+		displayFolder: 5 Formatting
+		lineageTag: 60a76b1b-df08-4e02-ba2f-6cc6c23fae82
+
+	column invoice
+		dataType: string
+		lineageTag: 6d0b4745-ce43-4dbe-9cea-aa852aa47e8d
+		summarizeBy: none
+		sourceColumn: invoice
+
+		annotation SummarizationSetBy = Automatic
+
+	column stock_code
+		dataType: string
+		lineageTag: 599fc5d1-fe64-444a-b8ab-f4c7146a2cca
+		summarizeBy: none
+		sourceColumn: stock_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 83ab5577-9496-497c-8791-ee63013b9609
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 3cf8d8de-f8e9-4fd2-8486-28ae6336b3fb
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		lineageTag: 95ca530d-7253-405c-8143-533f680ed27b
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column revenue
+		dataType: double
+		lineageTag: aab9e91d-e072-42ce-9888-12eef2c51391
+		summarizeBy: sum
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column invoice_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 53f15056-4c2d-408c-a8a4-9b41cf490224
+		summarizeBy: none
+		sourceColumn: invoice_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column invoice_day
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: 12e0fc48-e1ee-4eb7-bd3a-594e92ae264c
+		summarizeBy: none
+		sourceColumn: invoice_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 04306b57-aedd-4961-b873-0d31b1f3cb4e
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: string
+		isHidden
+		lineageTag: 7e453f52-a220-479e-8bf3-d4bfae76a4a3
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_quarter
+		dataType: string
+		isHidden
+		lineageTag: e1aa57e1-5f3b-42af-a3fb-eccaaa85b204
+		summarizeBy: none
+		sourceColumn: year_quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_num
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ad1f5302-f937-41b5-be9b-92753bd2a48c
+		summarizeBy: sum
+		sourceColumn: month_num
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		isHidden
+		lineageTag: 91961d99-b8e5-4e78-8a91-cb5ece37ece6
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		isHidden
+		lineageTag: 93800779-6d94-4f2b-832d-f2d2b1e2637d
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		isHidden
+		lineageTag: ae59d0b1-e41f-4e78-9b1d-434635fdcc2e
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e035dee3-294d-4ce5-8245-fab0ad2c783e
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_country
+		dataType: string
+		isHidden
+		lineageTag: 369fbdf4-e91f-4e6f-b08b-ca6b7ade040b
+		summarizeBy: none
+		sourceColumn: customer_country
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		isHidden
+		lineageTag: 31bf6575-1e8b-4d00-ae70-cd6b5c9dbab6
+		summarizeBy: none
+		sourceColumn: segment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c6b52808-e0bb-431c-8faf-3ab7b5cff301
+		summarizeBy: sum
+		sourceColumn: segment_order
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column r_score
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bffbe82c-dcf7-4fdb-8b56-cf69460d563b
+		summarizeBy: sum
+		sourceColumn: r_score
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_score
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 19357184-b38e-42d2-ba8c-3b83780751a2
+		summarizeBy: sum
+		sourceColumn: f_score
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column m_score
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fd292e56-df73-4d84-9028-ab0a5d0a6fe1
+		summarizeBy: sum
+		sourceColumn: m_score
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column rfm_score
+		dataType: string
+		isHidden
+		lineageTag: 0efc62df-f148-4614-8ffa-fd5f26540b5b
+		summarizeBy: none
+		sourceColumn: rfm_score
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column recency_days
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 21521b68-7636-4f99-844e-b6886c74f697
+		summarizeBy: sum
+		sourceColumn: recency_days
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column frequency
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8a78916e-acc2-4a95-89a1-87a088108925
+		summarizeBy: sum
+		sourceColumn: frequency
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column monetary
+		dataType: double
+		isHidden
+		lineageTag: d382a651-acec-428e-97ab-e27a1bf5795e
+		summarizeBy: sum
+		sourceColumn: monetary
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_churned
+		dataType: boolean
+		isHidden
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: db3ec7a1-4f95-4894-9309-c7423281a483
+		summarizeBy: none
+		sourceColumn: is_churned
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column churn_status
+		dataType: string
+		isHidden
+		lineageTag: a9d7cd28-5f36-45c4-8181-71f221f9cf1b
+		summarizeBy: none
+		sourceColumn: churn_status
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition analysis_ready = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost", "retail"),
+				  #"Navigation 1" = Source{[Schema = "public", Item = "analysis_ready"]}[Data],
+				  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 1", {{"invoice_date", type date}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

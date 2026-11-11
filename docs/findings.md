@@ -26,11 +26,12 @@
 ## 3. How do value and retention change over time?
 - **Flat year on year:** revenue for Jan–Nov 2011 (£7,799,595.72) matched Jan–Nov 2010 (£7,804,073.36), a change of −0.1%. 2011 was weaker in Feb–Apr (−11.6% to −20.9%) and stronger in May (+13.3%) and Sep (+14.7%).
 - **Strong Q4 seasonality:** revenue peaks in November in both years, at £1,166,460.02 (2010) and £1,156,205.61 (2011). Q4 contributes £2.77m (2010) and £2.71m (2011, data to 9 Dec).
-- **Retention up, acquisition down:**
+- **Retention up, acquisition down** (read with the caveat below):
   - Returning customers make up 78.9–83.7% of active customers in every 2011 quarter, against 60.0–71.3% in Q2–Q4 2010.
   - New customers per quarter fell from 778 in 2010-Q4 to 440 in 2011-Q4.
   - Of the 3,387 customers first seen in 2010, 58.3% bought again in 2011.
-- **Order size rose:** AOV climbed from £457.00 (2010) to £485.45 (2011).
+  - Caveat: the data starts in Dec 2009, so a customer can only count as returning if they bought since then. The look-back window grows each quarter, which by itself pushes returning % up and new counts down; 2009-Q4 is 100% new by construction, and 2011-Q4 runs only to 9 Dec. The 2011 quarters are the most comparable.
+- **Order size rose, partly because of one line:** AOV climbed from £457.00 (2010) to £485.45 (2011). One line drives part of that: customer 16446 bought 80,995 units of PAPER CRAFT, LITTLE BIRDIE for £168,469.60 on 9 Dec 2011 (invoice 581483, the only line on that invoice). Without it, 2011 AOV is £475.65 (£8,148,334.56 ÷ 17,131 orders), still above 2010.
 
 ## 4. How do value and churn differ by country?
 - **The UK dominates:** 82.8% of revenue and 91.0% of customers. Its churn rate is 51.2%, against 47.7% for non-UK customers.
