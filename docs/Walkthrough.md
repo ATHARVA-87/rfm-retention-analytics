@@ -341,6 +341,36 @@ The .pbix is built by hand in Power BI Desktop on Windows. The service-side auto
 - All measures are in one `DEFINE … EVALUATE` block for DAX query view. Running it once and clicking "Update model with changes" adds every measure.
 - The same query returns check tables. These must match the expected values, which are copied from the SQL and notebook outputs.
 
+**Built on Windows (milestone a):**
+- Power BI Desktop connected to `localhost/retail` in Import mode, without encryption, since a local PostgreSQL install has no SSL certificate. The three tables were renamed from `public …` to their bare names so the DAX references resolve. `invoice_day` was set to Date in Power Query.
+- Relationships: `segment_rules` → `customer_rfm` → `analysis_ready`, and `Date` → `analysis_ready[invoice_day]`, all many-to-one and single direction. The auto-detected `analysis_ready[segment]` → `segment_rules[segment]` relationship was deleted.
+- `Date` has 761 rows (1 Dec 2009 to 31 Dec 2011), is marked as the date table, and has sort-by columns set. Both `segment` columns sort by `segment_order`.
+- The measures were added through DAX query view. Formats and display folders were then applied in one step with the TMDL script `powerbi/measures.tmdl` (TMDL view → Apply). `Metric Toggle` field parameter and `Trend Title` were added afterwards.
+- `Churned %` uses `[Churned Customers] + 0`, so segments with no churned customers show 0.0% instead of blank.
+
+**Check query results** (DAX query view, no filters), all matching the SQL and notebook outputs:
+
+| Measure | Power BI |
+|---|---|
+| Total Revenue (£) | 17,374,804.27 |
+| Orders | 36,969 |
+| Total Customers | 5,878 |
+| Avg Order Value (£) | 469.98 |
+| Avg Customer Value (£) | 2,955.90 |
+| Churned Customers | 2,989 (50.9%) |
+| Revenue from Churned (£) | 3,391,383.66 |
+
+| Segment | Customers | Revenue (£) | Revenue share | Avg recency | Avg frequency | Avg monetary (£) | Churned % |
+|---|---|---|---|---|---|---|---|
+| Champions | 1,476 | 12,001,386.39 | 69.1% | 20.7 | 15.7 | 8,131.02 | 0.0% |
+| Loyal | 1,230 | 2,536,015.29 | 14.6% | 79.3 | 5.4 | 2,061.80 | 36.2% |
+| New | 441 | 392,021.57 | 2.3% | 28.5 | 1.5 | 888.94 | 0.0% |
+| Needs Attention | 388 | 205,137.22 | 1.2% | 107.6 | 1.4 | 528.70 | 51.8% |
+| At Risk | 821 | 1,586,359.12 | 9.1% | 370.3 | 4.9 | 1,932.23 | 100.0% |
+| Lost | 1,522 | 653,884.67 | 3.8% | 460.0 | 1.3 | 429.62 | 100.0% |
+
+Champions revenue reads 12,001,386.39 in Power BI against 12,001,386.40 in SQL. The raw sum is 12,001,386.394999…, and floating-point summation order puts it on the other side of the rounding boundary.
+
 **Churn under time filters:** the churn flag is a snapshot at 10 Dec 2011. With a period selected, Churned % reads as "of customers who bought in this period, the share who are churned now". This is stated in the measure notes and on the Home glossary.
 
 **Pages** (`layout_spec.md`):

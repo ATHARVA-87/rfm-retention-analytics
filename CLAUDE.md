@@ -39,6 +39,7 @@ The five business questions are in `docs/BRD.md`.
 | `notebooks/rfm_segmentation.ipynb` | RFM, segments, churn, 4 charts in `notebooks/figures/`. Already run |
 | `powerbi/dax_measures.md` | **Model, Date table, 29 measures (one DEFINE block for DAX query view), field parameter, expected values** |
 | `powerbi/layout_spec.md` | **Data import on Windows (§0), 3 page layouts, acceptance checks** |
+| `powerbi/measures.tmdl` | TMDL script: all measures with format strings and display folders (TMDL view → Apply) |
 | `powerbi/theme.json` | Power BI theme |
 | `docs/findings.md` | Answers to Q1–Q5, with one sized action per segment |
 | `docs/Walkthrough.md` | Full ground-up explanation; must be kept updated |
@@ -100,9 +101,9 @@ Cent-level differences can come from `monetary` being stored rounded to 2 dp.
 ## Remaining work (track progress here by ticking boxes)
 - [x] 1. PostgreSQL 16 installed on Windows (includes pgAdmin 4); `retail` database created
 - [x] 2. `rfm_bi.dump` restored; row counts verified (779,425 / 5,878 / 6)
-- [ ] 3. Power BI connected (Import), 3 tables loaded, `theme.json` applied
-- [ ] 4. Relationships, Date table (marked as date table, sort-by columns), `Metric Toggle` field parameter
-- [ ] 5. Measures added via DAX query view; check query matches the verified numbers. **Push milestone (a).**
+- [x] 3. Power BI connected (Import), 3 tables loaded, `theme.json` applied
+- [x] 4. Relationships, Date table (marked as date table, sort-by columns), `Metric Toggle` field parameter
+- [x] 5. Measures added via DAX query view; check query matches the verified numbers. **Push milestone (a).**
 - [ ] 6. Page 1 Home built
 - [ ] 7. Page 2 Business Overview built
 - [ ] 8. Page 3 RFM Analysis built; `segment_rules[Action]` calculated column added

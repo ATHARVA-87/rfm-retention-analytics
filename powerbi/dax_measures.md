@@ -85,7 +85,7 @@ DEFINE
         [Total Customers] - [Churned Customers]
 
     MEASURE analysis_ready[Churned %] =
-        DIVIDE ( [Churned Customers], [Total Customers] )
+        DIVIDE ( [Churned Customers] + 0, [Total Customers] )
 
     MEASURE analysis_ready[Revenue from Churned (£)] =
         CALCULATE ( [Total Revenue (£)], customer_rfm[is_churned] = TRUE () )

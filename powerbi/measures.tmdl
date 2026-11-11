@@ -1,0 +1,127 @@
+createOrReplace
+
+	ref table analysis_ready
+
+		measure 'Total Revenue (£)' = SUM ( analysis_ready[revenue] )
+			formatString: £#,0
+			displayFolder: 1 Core
+
+		measure Orders = DISTINCTCOUNT ( analysis_ready[invoice] )
+			formatString: #,0
+			displayFolder: 1 Core
+
+		measure 'Total Customers' = DISTINCTCOUNT ( analysis_ready[customer_id] )
+			formatString: #,0
+			displayFolder: 1 Core
+
+		measure 'Avg Order Value (£)' = DIVIDE ( [Total Revenue (£)], [Orders] )
+			formatString: £#,0.00
+			displayFolder: 1 Core
+
+		measure 'Avg Customer Value (£)' = DIVIDE ( [Total Revenue (£)], [Total Customers] )
+			formatString: £#,0.00
+			displayFolder: 1 Core
+
+		measure 'Churned Customers' = CALCULATE ( [Total Customers], customer_rfm[is_churned] = TRUE () )
+			formatString: #,0
+			displayFolder: 1 Core
+
+		measure 'Active Customers' = [Total Customers] - [Churned Customers]
+			formatString: #,0
+			displayFolder: 1 Core
+
+		measure 'Churned %' = DIVIDE ( [Churned Customers] + 0, [Total Customers] )
+			formatString: 0.0%
+			displayFolder: 1 Core
+
+		measure 'Revenue from Churned (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[is_churned] = TRUE () )
+			formatString: £#,0
+			displayFolder: 1 Core
+
+		measure 'Revenue Prev Month (£)' = CALCULATE ( [Total Revenue (£)], DATEADD ( 'Date'[Date], -1, MONTH ) )
+			formatString: £#,0
+			displayFolder: 2 Time
+
+		measure 'Revenue MoM %' = DIVIDE ( [Total Revenue (£)] - [Revenue Prev Month (£)], [Revenue Prev Month (£)] )
+			formatString: 0.0%
+			displayFolder: 2 Time
+
+		measure 'Revenue Same Period LY (£)' = CALCULATE ( [Total Revenue (£)], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+			formatString: £#,0
+			displayFolder: 2 Time
+
+		measure 'Revenue YoY %' = DIVIDE ( [Total Revenue (£)] - [Revenue Same Period LY (£)], [Revenue Same Period LY (£)] )
+			formatString: 0.0%
+			displayFolder: 2 Time
+
+		measure 'New Customers' =
+				VAR PeriodStart = MIN ( 'Date'[Date] )
+				VAR PeriodEnd   = MAX ( 'Date'[Date] ) + 1
+				RETURN
+					COUNTROWS (
+						FILTER (
+							VALUES ( analysis_ready[customer_id] ),
+							VAR FirstPurchase =
+								LOOKUPVALUE ( customer_rfm[first_purchase], customer_rfm[customer_id], analysis_ready[customer_id] )
+							RETURN FirstPurchase >= PeriodStart && FirstPurchase < PeriodEnd
+						)
+					) + 0
+			formatString: #,0
+			displayFolder: 3 Retention
+
+		measure 'Returning Customers' = [Total Customers] - [New Customers]
+			formatString: #,0
+			displayFolder: 3 Retention
+
+		measure 'Returning %' = DIVIDE ( [Returning Customers], [Total Customers] )
+			formatString: 0.0%
+			displayFolder: 3 Retention
+
+		measure 'Revenue Share %' = DIVIDE ( [Total Revenue (£)], CALCULATE ( [Total Revenue (£)], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+			formatString: 0.0%
+			displayFolder: 4 Segment
+
+		measure 'Customer Share %' = DIVIDE ( [Total Customers], CALCULATE ( [Total Customers], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+			formatString: 0.0%
+			displayFolder: 4 Segment
+
+		measure 'Avg Recency (days)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[recency_days] ) ) )
+			formatString: #,0.0
+			displayFolder: 4 Segment
+
+		measure 'Avg Frequency (invoices)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[frequency] ) ) )
+			formatString: #,0.0
+			displayFolder: 4 Segment
+
+		measure 'Avg Monetary (£)' = AVERAGEX ( VALUES ( analysis_ready[customer_id] ), CALCULATE ( MAX ( analysis_ready[monetary] ) ) )
+			formatString: £#,0
+			displayFolder: 4 Segment
+
+		measure 'Champions Revenue (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[segment] = "Champions" )
+			formatString: £#,0
+			displayFolder: 4 Segment
+
+		measure 'Champions Revenue Share %' = DIVIDE ( [Champions Revenue (£)], CALCULATE ( [Total Revenue (£)], REMOVEFILTERS ( customer_rfm[segment] ), REMOVEFILTERS ( segment_rules ) ) )
+			formatString: 0.0%
+			displayFolder: 4 Segment
+
+		measure 'At Risk Customers' = CALCULATE ( [Total Customers], customer_rfm[segment] = "At Risk" )
+			formatString: #,0
+			displayFolder: 4 Segment
+
+		measure 'At Risk Revenue (£)' = CALCULATE ( [Total Revenue (£)], customer_rfm[segment] = "At Risk" )
+			formatString: £#,0
+			displayFolder: 4 Segment
+
+		measure 'Loyal Churned Customers' = CALCULATE ( [Churned Customers], customer_rfm[segment] = "Loyal" )
+			formatString: #,0
+			displayFolder: 4 Segment
+
+		measure 'Loyal Churned Revenue (£)' = CALCULATE ( [Revenue from Churned (£)], customer_rfm[segment] = "Loyal" )
+			formatString: £#,0
+			displayFolder: 4 Segment
+
+		measure 'Lost Customers' = CALCULATE ( [Total Customers], customer_rfm[segment] = "Lost" )
+			formatString: #,0
+			displayFolder: 4 Segment
+
