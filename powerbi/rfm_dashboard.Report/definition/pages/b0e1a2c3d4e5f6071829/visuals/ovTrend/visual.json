@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "ovTrend",
   "position": {
     "x": 24,
@@ -27,55 +27,8 @@
                 }
               },
               "queryRef": "Date.Year Month",
-              "nativeQueryRef": "Year Month"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Total Revenue (£)"
-                }
-              },
-              "queryRef": "analysis_ready.Total Revenue (£)",
-              "nativeQueryRef": "Total Revenue (£)"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Total Customers"
-                }
-              },
-              "queryRef": "analysis_ready.Total Customers",
-              "nativeQueryRef": "Total Customers"
-            }
-          ],
-          "fieldParameters": [
-            {
-              "parameterExpr": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Metric Toggle"
-                    }
-                  },
-                  "Property": "Metric Toggle"
-                }
-              },
-              "index": 0,
-              "length": 2
+              "nativeQueryRef": "Year Month",
+              "active": true
             }
           ]
         },
@@ -110,25 +63,42 @@
               "nativeQueryRef": "Orders"
             }
           ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Total Revenue (£)"
+                }
+              },
+              "queryRef": "analysis_ready.Total Revenue (£)",
+              "nativeQueryRef": "Revenue (£)",
+              "displayName": "Revenue (£)"
+            }
+          ],
+          "fieldParameters": [
+            {
+              "parameterExpr": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Metric Toggle"
+                    }
+                  },
+                  "Property": "Metric Toggle"
+                }
+              },
+              "index": 0,
+              "length": 1
+            }
+          ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Date"
-                  }
-                },
-                "Property": "Year Month"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {

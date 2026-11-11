@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "homeTitle",
   "position": {
     "x": 24,
@@ -22,25 +22,35 @@
                     "value": "Customer Value & Retention Analysis",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "24pt",
-                      "color": "#2A1E1A"
+                      "fontSize": "20pt",
+                      "color": "#2a1e1a"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
-                    "value": "RFM segmentation of 5,878 customers and £17.4M of revenue (Dec 2009 – Dec 2011): where value is concentrated, which customers are lapsing, and the recommended action for each segment.",
+                    "value": "RFM segmentation of 5,878 customers and £17.4M of revenue (Dec 2009 – Dec 2011): ",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#7A6E66"
+                      "fontSize": "10pt",
+                      "color": "#7a6e66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "where value is concentrated, which customers are lapsing, and the recommended action for each segment.",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "10pt",
+                      "color": "#7a6e66"
+                    }
+                  }
+                ]
               }
             ]
           }

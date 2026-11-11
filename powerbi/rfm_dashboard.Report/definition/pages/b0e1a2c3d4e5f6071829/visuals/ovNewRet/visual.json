@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "ovNewRet",
   "position": {
     "x": 440,
@@ -27,7 +27,26 @@
                 }
               },
               "queryRef": "Date.Year Quarter",
-              "nativeQueryRef": "Year Quarter"
+              "nativeQueryRef": "Year Quarter",
+              "active": true
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Returning %"
+                }
+              },
+              "queryRef": "analysis_ready.Returning %",
+              "nativeQueryRef": "Returning %"
             }
           ]
         },
@@ -60,24 +79,6 @@
               },
               "queryRef": "analysis_ready.Returning Customers",
               "nativeQueryRef": "Returning Customers"
-            }
-          ]
-        },
-        "Tooltips": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "analysis_ready"
-                    }
-                  },
-                  "Property": "Returning %"
-                }
-              },
-              "queryRef": "analysis_ready.Returning %",
-              "nativeQueryRef": "Returning %"
             }
           ]
         }

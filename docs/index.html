@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer Value &amp; Retention Analysis</title>
+<meta name="description" content="RFM segmentation and churn analysis of 5,878 customers and £17.4M of revenue from a UK online giftware retailer, built in PostgreSQL, Python and Power BI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #F8F5EF;
+    --panel: #FFFDF9;
+    --ink: #2A1E1A;
+    --muted: #7A6E66;
+    --rule: #E8E1D6;
+    --oxblood: #6E1E2B;
+    --gold: #B08A3E;
+    --risk: #D6452B;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--ivory); color: var(--ink); font: 16px/1.6 var(--sans); }
+  a { color: var(--oxblood); text-underline-offset: 3px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  header.top { border-bottom: 2px solid var(--gold); background: var(--ivory); position: sticky; top: 0; z-index: 5; }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+  .brand { font: 600 17px/1 var(--serif); color: var(--ink); text-decoration: none; }
+  nav a { margin-left: 22px; color: var(--muted); text-decoration: none; font-size: 14px; }
+  nav a:hover { color: var(--oxblood); }
+
+  .hero { padding: 72px 0 40px; }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin: 0 0 14px; }
+  h1 { font: 600 clamp(34px, 5vw, 52px)/1.08 var(--serif); margin: 0 0 18px; max-width: 16ch; }
+  .lede { font-size: 19px; color: var(--muted); max-width: 62ch; margin: 0; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 44px; border-top: 1px solid var(--rule); }
+  .stat { padding: 20px 20px 4px 0; }
+  .stat + .stat { padding-left: 20px; border-left: 1px solid var(--rule); }
+  .stat b { display: block; font: 600 30px/1.1 var(--serif); font-variant-numeric: tabular-nums; }
+  .stat b.risk { color: var(--risk); }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  section { padding: 56px 0; border-top: 1px solid var(--rule); }
+  h2 { font: 600 30px/1.2 var(--serif); margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 28px; max-width: 64ch; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .chip { font: 500 14px/1.3 var(--sans); padding: 10px 16px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); border-radius: 999px; cursor: pointer; text-align: left; }
+  .chip small { display: block; font-size: 11px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+  .chip:hover { border-color: var(--gold); }
+  .chip[aria-pressed="true"] { background: var(--oxblood); border-color: var(--oxblood); color: #fff; }
+  .chip[aria-pressed="true"] small { color: #E9D9B8; }
+  .chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .answer { display: grid; grid-template-columns: 5fr 6fr; gap: 32px; align-items: start; background: var(--panel); border-top: 3px solid var(--oxblood); padding: 28px; }
+  .answer[hidden] { display: none; }
+  .answer h3 { font: 600 22px/1.3 var(--serif); margin: 0 0 12px; }
+  .answer ul { margin: 0; padding-left: 18px; }
+  .answer li { margin-bottom: 8px; }
+  .answer .where { font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .answer figure { margin: 0; }
+  .answer img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
+  .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .risk { color: var(--risk); }
+
+  table.actions { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.actions th { text-align: left; font-weight: 500; color: var(--muted); border-bottom: 1px solid var(--ink); padding: 6px 8px 6px 0; }
+  table.actions td { border-bottom: 1px solid var(--rule); padding: 8px 8px 8px 0; vertical-align: top; }
+  table.actions td:nth-child(2) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .pages { display: grid; gap: 40px; }
+  .pages figure { margin: 0; }
+  .pages img { width: 100%; height: auto; border: 1px solid var(--rule); display: block; }
+  .pages figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .pages figcaption b { color: var(--ink); font-weight: 600; }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  ol.steps li { counter-increment: s; padding: 0 20px 0 0; }
+  ol.steps li + li { padding-left: 20px; border-left: 1px solid var(--rule); }
+  ol.steps li::before { content: counter(s, decimal-leading-zero); display: block; font: 600 13px/1 var(--sans); color: var(--gold); margin-bottom: 10px; letter-spacing: .06em; }
+  ol.steps b { display: block; font: 600 17px/1.3 var(--serif); margin-bottom: 6px; }
+  ol.steps p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .two h3 { font: 600 19px/1.3 var(--serif); margin: 0 0 10px; }
+  .two ul { padding-left: 18px; margin: 0; font-size: 15px; }
+  .two li { margin-bottom: 8px; }
+
+  .links { display: flex; flex-wrap: wrap; gap: 12px; }
+  .links a { padding: 10px 16px; border: 1px solid var(--oxblood); text-decoration: none; font-weight: 500; font-size: 14px; }
+  .links a.primary { background: var(--oxblood); color: #fff; }
+
+  footer { border-top: 2px solid var(--gold); padding: 28px 0 48px; font-size: 13px; color: var(--muted); }
+  footer p { margin: 0 0 6px; }
+
+  @media (max-width: 860px) {
+    .stats, ol.steps { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(3), ol.steps li:nth-child(3) { padding-left: 0; border-left: 0; }
+    .answer, .two { grid-template-columns: 1fr; }
+    nav { display: none; }
+  }
+  @media (max-width: 480px) {
+    .stats, ol.steps { grid-template-columns: 1fr; }
+    .stat + .stat, ol.steps li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); padding-top: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">Customer Value &amp; Retention</a>
+    <nav aria-label="Sections">
+      <a href="#ask">Ask the dashboard</a>
+      <a href="#pages">Dashboard</a>
+      <a href="#method">Method</a>
+      <a href="#scope">Scope</a>
+      <a href="https://github.com/ATHARVA-87/rfm-retention-analytics">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">RFM segmentation · churn analysis · Power BI</p>
+    <h1>Customer Value &amp; Retention Analysis</h1>
+    <p class="lede">RFM segmentation of 5,878 customers and £17.4M of revenue from a UK online giftware retailer (Dec 2009 – Dec 2011): where value is concentrated, which customers are lapsing, and the recommended action for each segment.</p>
+    <div class="stats">
+      <div class="stat"><b>£17.37M</b><span>Customer-attributed revenue</span></div>
+      <div class="stat"><b>5,878</b><span>Customers, 36,969 orders</span></div>
+      <div class="stat"><b>69.1%</b><span>Of revenue from Champions (25.1% of customers)</span></div>
+      <div class="stat"><b class="risk">50.9%</b><span>Of customers churned as of 10 Dec 2011</span></div>
+    </div>
+  </div>
+
+  <section id="ask">
+    <div class="wrap">
+      <h2>Ask the dashboard</h2>
+      <p class="sub">Pick one of the five business questions. Each answer uses figures verified against the SQL and Python outputs, and shows the dashboard page it comes from.</p>
+      <div class="chips" role="group" aria-label="Business questions">
+        <button class="chip" data-q="q1" aria-pressed="true"><small>Q1 · Value</small>Who are the most valuable customers?</button>
+        <button class="chip" data-q="q2" aria-pressed="false"><small>Q2 · Churn</small>Which customers have gone quiet?</button>
+        <button class="chip" data-q="q3" aria-pressed="false"><small>Q3 · Time</small>How do value and retention change over time?</button>
+        <button class="chip" data-q="q4" aria-pressed="false"><small>Q4 · Country</small>How do value and churn differ by country?</button>
+        <button class="chip" data-q="q5" aria-pressed="false"><small>Q5 · Action</small>What should be done about each group?</button>
+      </div>
+
+      <div id="answers" aria-live="polite">
+        <article class="answer" id="q1">
+          <div>
+            <h3>A quarter of customers bring in over two thirds of revenue.</h3>
+            <ul>
+              <li><span class="num">1,476</span> Champions (25.1% of customers) generate <span class="num">£12,001,386.40</span>, or <span class="num">69.1%</span> of revenue.</li>
+              <li>They average <span class="num">15.68</span> orders and <span class="num">£8,131.02</span> each, and last bought <span class="num">20.69</span> days before the reference date.</li>
+              <li>Concentration: the top 1% of customers bring in <span class="num">32.0%</span> of revenue, the top 10% <span class="num">64.0%</span>.</li>
+              <li>Overseas orders are twice the size of UK orders: <span class="num">£870.94</span> vs <span class="num">£429.00</span> AOV.</li>
+            </ul>
+            <p class="where">Dashboard: RFM Analysis → share of customers vs share of revenue.</p>
+          </div>
+          <figure><img src="img/rfm.png" alt="RFM Analysis page: Champions hold 25.1% of customers and 69.1% of revenue" loading="lazy"></figure>
+        </article>
+
+        <article class="answer" id="q2" hidden>
+          <div>
+            <h3>Half the customer base is churned; the recoverable value sits in two groups.</h3>
+            <ul>
+              <li><span class="num risk">2,989</span> of 5,878 customers (<span class="num">50.9%</span>) made no purchase in the 90 days before 10 Dec 2011. They account for <span class="num">£3,391,383.66</span> of past revenue.</li>
+              <li><b>At Risk:</b> <span class="num">821</span> former frequent buyers (<span class="num">£1,586,359.12</span>). <span class="num">97</span> of them are top-quintile spenders holding <span class="num">£832,906.23</span>.</li>
+              <li><b>Loyal, just lapsed:</b> <span class="num">445</span> Loyal customers (<span class="num">£1,051,620.05</span>) are 92–190 days past their last order: the earliest and most recoverable warning.</li>
+            </ul>
+            <p class="where">Dashboard: RFM Analysis → KPI panels and segment table; Segment slicer → At Risk.</p>
+          </div>
+          <figure><img src="img/rfm.png" alt="RFM Analysis page: 821 At Risk customers, 445 Loyal customers past 90 days, 2,989 churned" loading="lazy"></figure>
+        </article>
+
+        <article class="answer" id="q3" hidden>
+          <div>
+            <h3>Revenue is flat year on year, with a strong Q4 peak.</h3>
+            <ul>
+              <li>Like for like (Jan–Nov): <span class="num">£7,804,073.36</span> in 2010 vs <span class="num">£7,799,595.72</span> in 2011, a change of <span class="num">−0.1%</span>.</li>
+              <li>November is the peak in both years: <span class="num">£1,166,460.02</span> (2010) and <span class="num">£1,156,205.61</span> (2011).</li>
+              <li>Returning customers make up <span class="num">78.9–83.7%</span> of active customers in every 2011 quarter, while new customers per Q4 fell from <span class="num">778</span> to <span class="num">440</span>. Part of this shift comes from the data window, which starts in Dec 2009.</li>
+            </ul>
+            <p class="where">Dashboard: Business Overview → monthly trend (Revenue / Customers toggle), quarter comparison, new vs returning.</p>
+          </div>
+          <figure><img src="img/overview.png" alt="Business Overview page: monthly revenue trend, revenue by quarter and year, new vs returning customers" loading="lazy"></figure>
+        </article>
+
+        <article class="answer" id="q4" hidden>
+          <div>
+            <h3>The UK dominates; the overseas risk is concentration, not churn.</h3>
+            <ul>
+              <li>The UK holds <span class="num">82.8%</span> of revenue and <span class="num">91.0%</span> of customers, with <span class="num">51.2%</span> churn against <span class="num">47.7%</span> for non-UK customers.</li>
+              <li>Germany (<span class="num">34.9%</span>) and France (<span class="num">35.8%</span>) have the lowest churn among countries with 20+ customers.</li>
+              <li>The Netherlands has the highest churn rate (<span class="num">72.7%</span>), but its 16 churned customers held only <span class="num">£15,817.50</span>; the <span class="num">6</span> active Dutch accounts hold <span class="num">£538,220.59</span>.</li>
+            </ul>
+            <p class="where">Dashboard: Business Overview → revenue by country; RFM Analysis → churn by country.</p>
+          </div>
+          <figure><img src="img/overview.png" alt="Business Overview page: revenue by country, top 10" loading="lazy"></figure>
+        </article>
+
+        <article class="answer" id="q5" hidden>
+          <div style="grid-column: 1 / -1">
+            <h3>One sized action per segment.</h3>
+            <table class="actions">
+              <thead><tr><th>Segment</th><th>Customers · revenue held</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>Champions</td><td>1,476 · £12,001,386.40</td><td>Account management for the 833 with top spend (£10,908,425.05); alert when any Champion passes 60 days without an order.</td></tr>
+                <tr><td>Loyal</td><td>1,230 · £2,536,015.29</td><td>Re-order reminder and volume pricing for the 445 past 90 days (£1,051,620.05); cross-sell to the 785 active.</td></tr>
+                <tr><td>New</td><td>441 · £392,021.57</td><td>Second-order offer to the 237 with exactly one order (£80,505.44).</td></tr>
+                <tr><td>Needs Attention</td><td>388 · £205,137.22</td><td>Automated reminder emails only; 201 already churned, £528.70 average, so no discounts.</td></tr>
+                <tr><td class="risk">At Risk</td><td>821 · £1,586,359.12</td><td>Personal win-back for the 97 top spenders (£832,906.23) first; time-limited offer for the 368 lapsed within a year (£784,634.10).</td></tr>
+                <tr><td>Lost</td><td>1,522 · £653,884.67</td><td>One reactivation email, then remove non-responders from paid campaigns.</td></tr>
+              </tbody>
+            </table>
+            <p class="where">Dashboard: RFM Analysis → segment summary and recommended action.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pages">
+    <div class="wrap">
+      <h2>The dashboard</h2>
+      <p class="sub">Three pages in Power BI Desktop, with six synced slicers, a revenue/customers toggle, cross-filtering and tooltips. The report is stored as a Power BI Project, so the model and every visual are text files in the repository.</p>
+      <div class="pages">
+        <figure><img src="img/home.png" alt="Home page: headline numbers, navigation, segment rules and definitions" loading="lazy"><figcaption><b>Home.</b> Headline numbers, the segment rule table and definitions.</figcaption></figure>
+        <figure><img src="img/overview.png" alt="Business Overview page" loading="lazy"><figcaption><b>Business Overview.</b> Revenue, orders and customers by month, quarter, year and country; new vs returning; top customers.</figcaption></figure>
+        <figure><img src="img/rfm.png" alt="RFM Analysis page" loading="lazy"><figcaption><b>RFM Analysis.</b> Value concentration, the R×F grid, churn by country and the action for each segment.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="wrap">
+      <h2>How it was built</h2>
+      <p class="sub">Every figure is reconciled from one stage to the next, and the dashboard's measures were checked against the SQL and notebook outputs.</p>
+      <ol class="steps">
+        <li><b>Load</b><p>1,067,371 raw rows into PostgreSQL 16 with <code>COPY</code>; the load fails if the count is wrong.</p></li>
+        <li><b>Clean</b><p>Duplicates, cancellations, adjustments and zero-value lines removed in logged steps: 779,425 customer purchase lines remain.</p></li>
+        <li><b>Segment</b><p>Python scores Recency, Frequency and Monetary in quintiles, assigns six segments from an R×F rule table and flags 90-day churn.</p></li>
+        <li><b>Present</b><p>Power BI star schema with 29 DAX measures; three pages generated as code from a Power BI Project.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="scope">
+    <div class="wrap two">
+      <div>
+        <h3>What it covers</h3>
+        <ul>
+          <li>Completed purchases by identified customers, 1 Dec 2009 – 9 Dec 2011, in GBP.</li>
+          <li>Recency and churn measured at 10 Dec 2011, the day after the last invoice.</li>
+          <li>Segments from R and F scores; M is reported per segment and follows the segments (Champions average M 4.42, Lost 1.70).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What it won't tell you</h3>
+        <ul>
+          <li>Revenue without a Customer ID (15.1%, £3,090,394.12) is excluded.</li>
+          <li>Cancellations are excluded, not netted; one 80,995-unit line (£168,469.60) lifts 2011 order value.</li>
+          <li>Churn is a 90-day snapshot, not a prediction; there is no forecasting model.</li>
+          <li>2009 is December only and 2011 ends on 9 Dec; comparisons use Jan–Nov.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Explore it</h2>
+      <p class="sub">The repository has the SQL, the notebook, the Power BI Project and a full walkthrough with a glossary and interview notes.</p>
+      <div class="links">
+        <a class="primary" href="https://github.com/ATHARVA-87/rfm-retention-analytics">Repository</a>
+        <a href="https://github.com/ATHARVA-87/rfm-retention-analytics/blob/main/docs/findings.md">Findings</a>
+        <a href="https://github.com/ATHARVA-87/rfm-retention-analytics/blob/main/docs/Walkthrough.md">Walkthrough</a>
+        <a href="https://github.com/ATHARVA-87/rfm-retention-analytics/tree/main/powerbi">Power BI Project</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Data: Daqing Chen, Online Retail II, UCI Machine Learning Repository, CC BY 4.0.</p>
+    <p>Methodology inspired by Mansi Goel's public tutorial; rebuilt independently in PostgreSQL and Python.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      document.querySelectorAll('.chip').forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+      document.querySelectorAll('#answers .answer').forEach(function (a) { a.hidden = a.id !== chip.dataset.q; });
+    });
+  });
+</script>
+</body>
+</html>

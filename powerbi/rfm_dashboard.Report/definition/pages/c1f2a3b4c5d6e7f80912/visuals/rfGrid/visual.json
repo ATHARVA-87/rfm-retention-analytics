@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "rfGrid",
   "position": {
     "x": 560,
@@ -13,25 +13,6 @@
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Rows": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "customer_rfm"
-                    }
-                  },
-                  "Property": "r_score"
-                }
-              },
-              "queryRef": "customer_rfm.r_score",
-              "nativeQueryRef": "r_score",
-              "displayName": "R score"
-            }
-          ]
-        },
         "Columns": {
           "projections": [
             {
@@ -47,25 +28,28 @@
               },
               "queryRef": "customer_rfm.f_score",
               "nativeQueryRef": "f_score",
+              "active": true,
               "displayName": "F score"
             }
           ]
         },
-        "Values": {
+        "Rows": {
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "analysis_ready"
+                      "Entity": "customer_rfm"
                     }
                   },
-                  "Property": "Total Customers"
+                  "Property": "r_score"
                 }
               },
-              "queryRef": "analysis_ready.Total Customers",
-              "nativeQueryRef": "Total Customers"
+              "queryRef": "customer_rfm.r_score",
+              "nativeQueryRef": "r_score",
+              "active": true,
+              "displayName": "R score"
             }
           ]
         },
@@ -90,6 +74,24 @@
               "queryRef": "Min(customer_rfm.segment)",
               "nativeQueryRef": "Segment",
               "displayName": "Segment"
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "analysis_ready"
+                    }
+                  },
+                  "Property": "Total Customers"
+                }
+              },
+              "queryRef": "analysis_ready.Total Customers",
+              "nativeQueryRef": "Total Customers"
             }
           ]
         }

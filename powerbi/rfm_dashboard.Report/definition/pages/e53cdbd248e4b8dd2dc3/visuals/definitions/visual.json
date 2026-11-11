@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "definitions",
   "position": {
     "x": 656,
@@ -23,21 +23,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "11pt",
-                      "color": "#2A1E1A"
+                      "color": "#2a1e1a"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Recency: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -45,21 +44,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Frequency: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -67,21 +65,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Monetary: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -89,21 +86,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "R/F/M score: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -111,21 +107,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Churned: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -133,21 +128,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "AOV: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -155,18 +149,16 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }
         }
       ]
     },
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }

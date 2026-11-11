@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "rfTable",
   "position": {
     "x": 24,
@@ -390,55 +390,6 @@
           },
           "selector": {
             "metadata": "segment_rules.Action"
-          }
-        }
-      ],
-      "dataBars": [
-        {
-          "properties": {
-            "positiveColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D6452B'"
-                    }
-                  }
-                }
-              }
-            },
-            "negativeColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#D6452B'"
-                    }
-                  }
-                }
-              }
-            },
-            "axisColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E8E1D6'"
-                    }
-                  }
-                }
-              }
-            },
-            "hideText": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "analysis_ready.Churned %"
           }
         }
       ],

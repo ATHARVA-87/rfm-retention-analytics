@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "dataNote",
   "position": {
     "x": 24,
@@ -21,10 +21,10 @@
                   {
                     "value": "Source: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -32,21 +32,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Cleaning: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -54,21 +53,20 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
                   {
                     "value": "Scope: ",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38",
-                      "fontWeight": "bold"
+                      "color": "#4a3f38"
                     }
                   },
                   {
@@ -76,11 +74,10 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#4A3F38"
+                      "color": "#4a3f38"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               },
               {
                 "textRuns": [
@@ -89,11 +86,10 @@
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "9pt",
-                      "color": "#7A6E66"
+                      "color": "#7a6e66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }
